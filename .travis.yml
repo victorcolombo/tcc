@@ -13,4 +13,4 @@ deploy:
   github-token: $GITHUB_TOKEN
   local-dir: pagina/
   on:
-    branch: gh-pages
+    branch: master
