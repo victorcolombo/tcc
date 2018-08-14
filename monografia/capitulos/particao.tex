@@ -1,0 +1,155 @@
+\chapter{Problema da Partição}
+\label{particao}
+
+\subsection*{Enunciado}
+
+É dado um vetor de $n$ números inteiros, $v = \{v_1, v_2, ..., v_n\}$, tal que, para todo $i \in [1, n]$, vale que $1 \leq v_i \leq i$.
+
+O objetivo é encontrar, se existir, uma partição de $v$ em dois conjuntos de igual soma.
+
+Formalmente, queremos encontrar $r = \{r_1, r_2, ..., r_n\}$, com $r_i \in \{-1, 1\}$ para todo $i \in [1, n]$, tal que:
+$$\sum_{i = 1}^n v_i*r_i = 0$$
+
+\subsection*{Exemplos}
+
+\begin{enumerate}
+    \item A entrada $n = 4, v = \{1, 2, 3, 3\}$ não apresenta particionamento possível pois $1 + 2 + 3 + 3 = 9$ é ímpar.
+    \item A entrada $n = 4, v = \{1, 2, 3, 4\}$ apresenta o particionamento $r = \{-1, 1, 1, -1\}$. Note que o particionamento $r = \{1, -1, -1, 1\}$ também é válido, por simetria.
+    \item A entrada $n = 4, v = \{1, 1, 3, 3\}$ apresenta tanto o particionamento $r = \{-1, 1, -1, 1\}$ quanto $r = \{-1, 1, 1, -1\}$, ou seja, podem existir mútiplos particionamentos válidos, não necessáriamente simétricos.
+    \item A entrada $n = 3, v = \{1, 1, 3\}$ não apresenta particionamento possível, pois $v_3 = 3 > 1 + 1$.
+    \item A entrada $n = 3, v = \{1, 2, 4\}$ não é uma entrada válida já que não vale a restrição $1 \leq v_3 \leq 3$.
+\end{enumerate}
+
+\subsection*{Observações iniciais}
+
+Antes de resolver o problema, vale tentar estabelecer conexão com problemas famosos ou de estrutura semelhante.
+
+O primeiro pensamento que vem a tona é a semelhança do enunciado com o Problema da Partição\footnote{\url{https://en.wikipedia.org/wiki/Partition_problem}}. Além disso, o problema enunciado pode ser encarada como uma instância direta deste problema clássico.
+
+Isto já nos traz um grande arsenal de informações, pois sabemos que o problema original é NP-completo e pode ser resolvido em tempo pseudo-polinomial usando Programação Dinâmica. Agora basta pensar se podemos fazer melhor.
+
+Outro produto da conexão com problemas NP-completo é que podemos \textit{"desconfiar"} das restrições adicionais, explorando-as em busca de uma solução melhor que do problema original.
+
+Neste caso, a restrição de entrada $1 \leq v_i \leq n$ é a única diferença entre o Problema da Partição e o problema apresentado. 
+Problemas NP-completo são, à primeira vista, bastante atraentes para soluções gulosas. Evidentemente, pela sua natureza, todas essas solução são incorretas. Com a nova restrição, porém, podemos reavaliar alguns destes algoritmos.
+
+\subsection*{Abordagens}
+
+Um algoritmo guloso natural é, iterativamente, contruir as partições, começando com duas partições vazias, encaminhamos um elemento à partição com menor soma, tentando deixar as partições mais \emph{"equilibradas"} possível a todo momentos, isto é, minizando a diferença entre as partições em todo momento.
+
+Além disso, como estamos trabalhando com restrição na entrada em função do índice, temos a intuição de que a ordem em que esses elementos são adicionados importa. Daí segue duas opções imediatas: iterando crescentemente de $1$ a $n$ ou iterando descrescentemente de $n$ a $1$.
+
+\subsubsection*{Iterando crescentemente}
+
+Podemos rapidamente descartar esta ordem retornando ao exemplo 2) que já analisamos. Na entrada $v = \{1, 2, 3, 4\}$.
+
+Encaminhamos o elemento $v_1 = 1$ para uma partição arbitrária, já que as duas estão vazias. A partir daí, encaminhamos $v_2 = 2$ para a partição oposta a de $v_1$. Aplicamos o mesmo raciocínio para $v_3$ e $v_4$.
+
+Chegando assim na resposta inválida $r = \{-1, 1, -1, 1\}$, que resulta em partições de somas distintas, já que $(-1)*1 + (+1)*2 + (-1)*3 + (+1)*4 \neq 0$.
+
+Descartamos assim esta ordem.
+
+\subsubsection*{Iterando decrescentemente}
+
+Uma intuição de porque esta ordem funcionaria e a anterior não é o fato de que iterando descrescentemente, o limite superior de cada elemento diminui, pois este é limitado por seu índice, ou seja, a cada passo o tamanho de cada pilha varia cada vez menos até convergir ou não até a resposta.
+
+Testando com a mesma entrada $v = \{1, 2, 3, 4\}$, temos:
+
+Encaminhamos o elemento $v_4 = 4$ para uma partição arbitrária, já que as duas estão vazias. A partir daí, encaminhamos $v_3 = 3$ para a partição oposta a de $v_4$. Por sua vez, $v_2 = 2$ é encaminhado para a partição de $v_3$. Aplicamos o mesmo raciocínio para $v_1$.
+
+Chegando assim na resposta válida $r = \{-1, 1, 1, -1\}$, que resulta em partições de somas iguais, já que $(-1)*1 + (+1)*2 + (+1)*3 + (-1)*4 = 0$.
+
+\emph{Exercício:} Este exemplo é bem simples. Você deve testar com outras entradas mais complexas para tentar desprovar o algoritmo.
+
+Já que nosso algoritmo apresenta uma série de sucessos em exemplos que montamos, é a hora de tentar formalizá-lo.
+
+
+
+\subsection*{Formalização e demonstração}
+
+Sejam $A$ e $B$ as duas partições tal qiue dizemos que $v_i$ pertence a partição $A$ se $r_i = 1$ e pertence a $B$ se $r_i = -1$.
+
+Definições:
+
+$S_i$ é a soma acumulada do prefixo $v_1, v_2, ..., v_i$. Formalmente $S_i = \sum_{j = 1}^{i} v_j$.
+
+$a_i$ é a "folga" de $A$, isto é, a diferença entre o valor esperado da partição e a soma dos elementos que já foram encaminhados a $A$, depois do processamento dos elementos $v_{i + 1}, v_{i + 2}, ..., v_{n}$ pelo algoritmo.
+Analogamente, definimos $b_i$ para a partição $B$.
+
+Proposição 1: Se $S_n$ é ímpar, não há solução.
+
+Prova: Pela definição, a soma das partições $A$ e $B$ devem ser iguais para existir solução. Assim, cada partição deve ter soma $\frac{S_n}{2}$.
+
+Suponha que $S_n$ é ímpar e há solução.
+
+É fácil ver que $\frac{S_n}{2} \not\in \mathbb{Z}$. Absurdo, já que a soma de uma partição que é um subconjunto de $v$, com $v_i \in \mathbb{Z}$, é inteira. Por contradição, ou $S_n$ não é ímpar ou não há solução
+
+A partir desde ponto assumiremos que $S_n$ é par.
+
+Proposição 2: Para qualquer iteração $n - i + 1$ do algoritmo, existe folga de tamanho pelo menos $v_i$ em $A$ ou $B$. Formalmente, $a_i \geq v_i$ ou $b_i \geq v_i$
+
+\subsubsection*{Prova:}
+
+Considere a iteração que decide para que partição $v_i$ será encaminhado, com as partições $A$ e $B$ com folgas $a_i$ e $b_i$, respectivamente.
+
+Primeiramente devemos notar que
+\begin{equation} \label{eq:1}
+    a_i + b_i = S_i
+\end{equation}
+, já que todo elemento deverá ser encaminhado para alguma partição.
+
+Pela definição, sabemos que $S_{i - 1} \geq i - 1$ e $v_i \leq i$. A partir disso, temos que $S_{i - 1} \geq i - 1 \geq v_i - 1$.
+
+Assim, podemos escrever $S_i$ como:
+
+\begin{equation} \label{eq:2}
+    S_i = S_{i - 1} + v_i \geq 2*v_i - 1
+\end{equation}
+
+Vamos assumir que nem $A$, nem $B$, tenham "folga" suficiente para acomodar $v_i$. Provaremos por contradição, separado em 2 casos:
+
+\subsubsection*{Caso 1: $a_i$ e $b_i$ tem a mesma paridade.}
+
+Se $a_i$ e $b_i$ tem a mesma paridade, $S_i$ é par.
+
+Como nenhuma partição tem "folga" para acomodar $v_i$, vale que $a_i < v_i$ e $b_i < v_i$. Somando as equações, vale que:
+
+$a_i + b_i < 2*v_i$ ou também $a_i + b_i \leq 2*v_i - 1$
+
+Utilizando \ref{eq:1} e \ref{eq:2}, segue que $a_i + b_i \geq 2*v_i - 1$.
+
+Ora mas se $a_i + b_i \geq 2*v_i - 1$ e $a_i + b_i \leq 2*v_i - 1$, vale que:
+
+$$S_i = a_i + b_i = 2*v_i - 1$$
+
+Contradição, já que $2*v_i - 1$ é ímpar e $S_i$ é par.
+
+\subsubsection*{Caso 2: $a_i$ e $b_i$ tem diferentes paridades.}
+
+Como nenhuma partição tem "folga" para acomodar $v_i$ e que $a_i$ e $b_i$ tem paridades diferentes, vale que $a_i < v_i$ e $b_i < v_i - 1$ ou $a_i < v_i - 1$ e $b_i < v_i$
+
+Vamos assumir, sem perda de generalidade, que $a_i < v_i$ e $b_i < v_i - 1$.
+
+Utilizando \ref{eq:1} e \ref{eq:2}, segue que $a_i + b_i < 2*v_i - 1$, ou também, $a_i + b_i \leq 2*v_i - 2$.
+
+Ora mas se $a_i + b_i \geq 2*v_i - 1$ e $a_i + b_i \leq 2*v_i - 2$, há uma constradição, já que a intersecção é vazia.
+
+\subsection*{Observações finais}
+
+Vários colorários interessantes saem desta demonstração.
+
+Colorário 1: $S_n$ é ímpar \textbf{se e somente se} não há solução.
+
+Isso é uma diferença fundamental a instância genérica do problema, em que sequer decidir se o problema tem solução é NP-completo.
+
+Colorário 2: A pilha em que o objeto é colocado não importa, desde que haja "folga".
+
+Encaminhar elementos para a menor pilha é um modo sem ambiguidades montar as partições, mas vale notar que em nenhum momento utilizamos critério do mínimo na demonstração. Assim poderiamos criar um algoritmo que escolhe colocar o elemento atual na pilha $A$ e somente se não houvesse "folga" colocasse em $B$. Outro algoritmo não intuitivo seria encaminhar o elemento aleatoriamente entre as partições com folga.
+
+\subsection*{Análise e implementação}
+
+Verificar se a soma é par é facilmente resolvida com um iterar em todos os elementos, mantendo a soma total. Complexidade O(n).
+
+Para encontrar a partição basta iterar em todos os elementos de maneira reversa, mantendo dois contadores representando as "folgas", do mesmo jeito que foi feito na demonstração. Complexidade O(n).
+
+ADICIONAR CÓDIGO

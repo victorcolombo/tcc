@@ -1,9 +1,97 @@
-\documentclass[12pt]{article}
+%----------------------------------------------------------------------------------------
+%   PACKAGES AND SETTINGS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt,openany]{book}
+
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=violet!85!black,
+    linkcolor=MidnightBlue,
+    urlcolor=MidnightBlue
+}
+
+\usepackage{setspace}
+\onehalfspacing
+\usepackage[a4paper,top=3cm,bottom=2.3cm,left=2.2cm,right=2.2cm]{geometry}
+
+\usepackage{amsmath,amsthm,amsfonts,mathtools}
+
+\usepackage[noend]{algpseudocode}
+\usepackage[chapter]{algorithm}
+\usepackage{listings}
+
+\usepackage[color=green!40]{todonotes}
+
+\usepackage[authoryear]{natbib}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,positioning,shadows,trees,patterns,snakes,matrix}
+
+\usepackage[shortlabels]{enumitem}
+
+\sloppy
 
 \begin{document}
 
-Hello world!
+%----------------------------------------------------------------------------------------
+%   TITLE PAGE
+%----------------------------------------------------------------------------------------
 
-\end{document} 
-  
- 
+\frontmatter
+
+\thispagestyle{empty}
+\begin{center}
+\Large \textbf{\textsc{Material didático sobre algoritmos gulosos}} \\[120pt]
+\large \textsc{Trabalho de conclusão de curso} \\
+\large \textsc{Universidade de São Paulo} \\
+\large \textsc{Bacharelado em Ciência da Computação}\\[120pt]
+\large \textsc{Victor de Oliveira Colombo} \\
+\large \textsc{Orientador: Carlos Eduardo Ferreira}
+\vfill
+\normalsize{São Paulo, 2018}
+\end{center}
+
+%----------------------------------------------------------------------------------------
+%   ABSTRACT
+%----------------------------------------------------------------------------------------
+
+%\include{Sections/Resumo}
+
+%----------------------------------------------------------------------------------------
+%   LISTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents
+%\listoffigures
+%\listoftables
+
+%----------------------------------------------------------------------------------------
+%   DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+%\input{definitions.tex}
+
+%----------------------------------------------------------------------------------------
+%   CONTENT
+%----------------------------------------------------------------------------------------
+
+\mainmatter
+\include{capitulos/particao}
+
+%----------------------------------------------------------------------------------------
+%   BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{main}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}  
