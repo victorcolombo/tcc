@@ -1,14 +1,4 @@
-GARBAGE = *.aux *.blg *.log *.toc *.bbl *.out
-ALL = GARBAGE *.pdf
-
-all: main.pdf clean
-	open main.pdf
-
-clean:
-	$(foreach var, $(GARBAGE), find . -type f -name '$(var)' -delete ;)
-
-clear:
-	$(foreach var, $(ALL), find . -type f -name '$(var)' -delete ;)
+all: main.pdf
 
 main.pdf: main.tex capitulos/*.tex definitions.tex main.bib
 	pdflatex main.tex
