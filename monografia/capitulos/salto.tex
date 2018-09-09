@@ -13,7 +13,7 @@ A seguir aplicaremos tal técnica para demonstrar a corretude de um problema.
 
 \subsection*{Enunciado}
 
-É dado um vetor de $n$ números ordenados distintos $v = \{v_1, v_2, ..., v_n\}$ e um número $\Delta$.
+É dado um vetor de $n$ números \underline{ordenados distintos} $v = \{v_1, v_2, ..., v_n\}$ e um número $\Delta$.
 
 Uma sequência $u = \{u_1, u_2, ..., u_k\}$ é \textbf{solução} se:
 \begin{itemize}
@@ -32,9 +32,9 @@ Diremos que $u$ é ótima se é uma solução ótima.
 \subsection*{Exemplos}
 
 \begin{enumerate}
-    \item A entrada $n = 4$, $v = \{1, 2, 3, 4\}$, $\Delta = 1$ existem diversas sequências possíveis, entre elas $\{1, 2, 3, 4\}$, $\{1, 2, 1, 2, 3, 4\}$ e $\{1, 2, 1, 2, 3, 2, 3, 4\}$. A sequência de menor $k = 4$, $u = \{1, 2, 3, 4\}$.
-    \item A entrada $n = 6$, $v = \{1, 2, 3, 5, 6, 7\}$, $\Delta = 2$ tem como solução $u = \{1, 3, 5, 7\}$.
-    \item A entrada $n = 3$, $v = \{1, 3, 4\}$, $\Delta = 1$ não apresenta solução, já que a partir de $1$ não é possível que $3$ ou $4$ sejam o próximo elemento da sequência. Não consideraremos este caso neste problema.
+    \item A entrada $n = 4$, $v = \{1, 2, 3, 4\}$, $\Delta = 1$ existem diversas soluções possíveis, entre elas $\{1, 2, 3, 4\}$, $\{1, 2, 1, 2, 3, 4\}$ e $\{1, 2, 1, 2, 3, 2, 3, 4\}$. A sequência de menor $k = 4$ é $u = \{1, 2, 3, 4\}$.
+    \item A entrada $n = 6$, $v = \{1, 2, 3, 5, 6, 7\}$, $\Delta = 2$ tem como solução ótima $u = \{1, 3, 5, 7\}$.
+    \item A entrada $n = 3$, $v = \{1, 3, 4\}$, $\Delta = 1$ não apresenta solução, já que a partir de $1$ não é possível que $3$ ou $4$ sejam o próximo elemento da sequência. Desconsideraremos estes casos neste problema.
 \end{enumerate}
 
 \subsection*{Observações iniciais}
@@ -95,7 +95,7 @@ Além disso, temos que $\{u_1, u_2, ..., u_i\}$ é crescente. Ou seja, vale que 
 0 \leq u_i - u_{i - 1} \leq \Delta
 \end{equation}
 
-Multiplicando a equação \ref{eq:diffl} por -1 e somando com \ref{eq:diffr} temos:
+Multiplicando a equação \ref{eq:diffr} por -1 e somando com \ref{eq:diffl} temos:
 \begin{align}  \label{eq:diff}
 -\Delta \leq - u_i + u_{i + 1} \leq 0 \nonumber \\
 0 \leq u_i - u_{i - 1} \leq \Delta \nonumber \\
@@ -132,7 +132,7 @@ $$u_{x + 1} - u_{x} \leq \Delta$$
 
 Como tanto $u$ quanto $u^*$ são estritamente crescentes, $u_{x + 1} > u^*_{x + 1}$, concluímos que $|u^*_{x + 2} - u_{x + 1}| \leq \Delta$.
 
-Desta forma, podemos \textbf{trocar} $u^*_{x + 1}$ por $u_{x + 1}$, criando a sequência $\bar{u} = \{u_1, u_2, ..., u_x, u_{x + 1}, u^*_{x + 2}, ..., u^*{k^*}\}$. Como $\bar{u}$ tem o mesmo tamanho que $u^*$ e possui prefixo comum com $u$ de tamanho $x + 1$, temos uma contradição na hipótese que $x$ é máximo.
+Desta forma, podemos \textbf{trocar} $u^*_{x + 1}$ por $u_{x + 1}$, criando a sequência $\bar{u} = \{u_1, u_2, ..., u_x, u_{x + 1}, u^*_{x + 2}, ..., u^*_{k^*}\}$. Como $\bar{u}$ tem o mesmo tamanho que $u^*$ e possui prefixo comum com $u$ de tamanho $x + 1$, temos uma contradição na hipótese que $x$ é máximo.
 
 \end{proof}
 
