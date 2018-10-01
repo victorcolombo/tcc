@@ -1,0 +1,141 @@
+\chapter{Aplicação em Programação Dinâmica}
+\label{pd}
+
+\subsection*{Introdução}
+
+Na Introdução apresentamos Programação Dinâmica como uma abordagdem paralela a gulosa para resolução de problemas de otimização. Neste capítulo mostraremos que, na verdade, é possível aliar ambas as técnicas.
+
+Quando resolvemos problemas como o Problema da Mochila ou o Problema do Troco, fazemos a hipótese de que a ordem em que os itens ou moedas são selecionados não importa, já que estamos interessados apenas no subconjunto final de itens.
+
+A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzí-lo ao problema original utilizando uma técnica gulosa.
+
+\subsection*{Enunciado}
+
+Existe uma mochila vazia de tamanho $S$ e $n$ itens que desejamos colocar nesta mochila. Cada item tem dois pesos atrelados a ele: $w_i$, o peso do item após ser colocado na mochila, e $c_i$, o peso do item antes de ser colocado na mochila. Além disso, cada item tem um valor atrelado $v_i$ a ele.
+
+Um item pode ser colocado na mochila se existe espaço restante na mochila é maior que $c_i$. Após colocado, ele ocupa o peso $w_i$.
+
+Deseja-se decidir que itens serão adicionados na mochila e sua ordem, respeitando as restrições de peso e que somem o valor máximo.
+
+Formalmente, são dados um inteiro $S$ e três vetores contendo $n$ inteiros positivos cada: $w = \{w_1, w_2, ..., w_n\}$, $v = \{v_1, v_2, ..., v_n\}$, $c = \{c_1, c_2, ..., c_n\}$, onde $c_i \geq w_i$ para todo $i \in [1, n]$. Seja $r = \{r_1, r_2, ..., r_k\}$, $k \leq |I|$, uma permutação de um subconjunto $I \subseteq [1, n]$. 
+
+Dizemos que uma permutação $r$ é $\textbf{válida}$ se $c_{r_j} + \sum_{i = 1}^{j - 1} w_{r_i} \leq S$, para todo $j \in [1, k]$, e que um subconjunto $I$ é $\textbf{válido}$ se possui uma permutação válida.
+
+Definimos o valor de um subconjunto como:
+
+\begin{equation} \label{pd:val}
+  V(I) =
+  \begin{cases}
+  0                      & I \text{não é válido} \\
+  \sum_{e \in I} v_{e}   & I \text{é válido} \\
+  \end{cases}
+\end{equation}
+
+Dizemos que $I$ é um $\textbf{subconjunto ótimo}$ se $V(I)$ é máximo. Desejamos encontrar um subconjunto ótimo $I$.
+
+\subsection*{Exemplos}
+
+\begin{enumerate}
+    \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = w = \{1, 2, 2, 4\}$, tem uma solução ótima $I = \{1, 2, 3\}$, $r = \{1, 2, 3\}$, $V(I) = 1 + 2 + 3 = 6$. Vale notar que $r = \{3, 1, 2\}$ e $r = \{3, 2, 1\}$ também são permutações válidas de $I$.
+    \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = \{3, 1, 3, 1\}$, $w = \{1, 2, 2, 4\}$, tem uma solução ótima, $I = \{1, 2, 3\}$, $r = \{3, 1, 2\}$, $V(I) = 1 + 2 + 3 = 6$. Desta vez, porém, a ordem importa, já que $r = \{1, 2, 3\}$ e $r = \{3, 2, 1\}$ infringem a condição dos pesos, sendo permutações inválidas de $I$. \label{pd:ex2}
+\end{enumerate}
+
+\subsection*{Observações iniciais}
+
+Primeiramente é necessário observar que se $c = w$, o problema é uma instância do Problema da Mochila clássico. Este, por sua vez, pode ser resolvido com uma Programação Dinâmica de recorrência:
+
+\begin{equation} \label{pd:recnaiv}
+  f(i, s, v, w, n) =
+  \begin{cases}
+  0                                                             & \text{se $i = n + 1$} \\
+  max(f(i + 1, s, v, w, n), v_i + f(i + 1, s - w_i, v, w, n))   & \text{se $w_i \leq s$} \\
+  f(i + 1, s, v, w, n)                                          & \text{c.c.} \\
+  \end{cases}
+\end{equation}
+
+Uma ideia inicial para adaptar o algoritmo clássico seria modificar a condição de $w_i \leq s$ para $c_i \leq s$, como mostrado abaixo:
+
+\begin{equation} \label{pd:recok}
+  g(i, s, v, w, c, n) =
+  \begin{cases}
+  0                                                                   & \text{se $i = n + 1$} \\
+  max(g(i + 1, s, v, w, c, n), v_i + g(i + 1, s - w_i, v, w, c, n))   & \text{se $c_i \leq s$} \\
+  g(i + 1, s, v, w, c, n)                                             & \text{c.c.} \\
+  \end{cases}
+\end{equation}
+
+ A priori, esta modificação parece suficiente para compreender as restrições impostas pelo enunciado. Esta modificação por si só, porém, não é suficiente. 
+
+A recorrência \label{pd:recnaiv} assume que, como a ordem de inserção no problema original não importa, é possível fixar uma ordem arbitrária. Neste caso, são os itens do menor ao maior índice. Como notado no \hyperref[pd:ex2]{Exemplo 2}, isso não é verdade para este problema. Não basta selecionar o subconjunto de itens a serem inseridos na mochila mas é também necessário encontrar a ordem ótima de inserção destes itens na mochila.
+
+Para lidar com isso, poderíamos aplicar a recorrência \label{pd:recnaiv} para toda escolha de permutação de $d, w, v$. Isto nos daria uma solucão de complexidade $O(nSn!)$ em tempo, mas é possível fazer melhor que isso.
+
+Podemos desconfiar que existe um critério independente do subconjunto escolhido para encontrar a ordem em que os itens devem ser inseridos e que essa ordem segue algum critério guloso.
+
+\subsection*{Abordagem}
+
+Vamos supor que já sabemos o subconjunto ótimo de itens e precisamos apenas decidir sua ordem. Algumas ordens candidatas são:
+
+\subsubsection*{Decrescente em $c$}
+
+Intuitivamente, essa ordem representa inserir o elemento que é mais pesado antes de ser colocado na mochila o quanto antes. Essa ordem é, porém, rapidamente descartada através do exemplo \ref{pd:ex2} que montamos anteriormente, onde $r = \{3, 2, 1\}$ é decrescente em $c$ mas não é válida.
+
+\subsubsection*{Decrescente em $c - w$}
+
+Intuitivamente, essa ordem representa inserir o mais cedo possível itens que mais são pesados antes quando comparados com seus pesos após serem colocados, aproveitando quando a mochila tem espaço para satisfazer a condição anterior a inserção e ocupando comparativamente pouco espaço após colocá-los.
+
+Essa é, de fato, a ordem correta. Utilizaremos um argumento semelhante ao apresentado no capítulo 1, para demonstração.
+
+\subsection*{Demonstração}
+
+Definiremos uma função $F(r)$ como o número de pares de índices $(i, j)$, $i \leq j$, tal que $c_{r_i} - w_{r_i} < c_{r_j} - w_{r_j}$.
+
+\begin{theo} \label{pd:proof}
+Se $I \subseteq [1, n]$ é um subconjunto ótimo de itens e $r$ é uma permutação de $I$ tal que $c_{r_i} - w_{r_i} \geq c_{r_j} - w_{r_j}$ para todo $i \leq j$, então $r$ é uma permutação válida.
+\end{theo}
+\begin{proof}
+Se $|I| = 1$, está provado. Caso contrário, suponha que $r$ não seja uma permutação válida. Por definição, $F(r) = 0$.
+
+Seja $r^*$ uma permutação válida de $I$ com menor valor de $F(r^*) > 0$. Seja $t \in [1, |I| - 1]$ o primeiro índice tal que $c_{r^*_t} - w_{r^*_t} < c_{r^*_{t + 1}} - w_{r^*_{t + 1}}$.
+
+Seja $S^* = S - \sum_{i = 1}^{t - 1} w_{r^*_i}$. Para $r^*$ ser uma permutação válida, temos as condições:
+
+\begin{equation}\label{pd:eq1}
+  c_{r^*_t} \leq S^*
+\end{equation}
+\begin{equation}\label{pd:eq2}
+  c_{r^*_{t + 1}} \leq S^* - w_{r^*_t}
+\end{equation}
+
+Note que se $c_{r^*_{t + 1}} \leq S^* - w_{r^*_t}$. então:
+
+\begin{equation}\label{pd:eq3}
+  c_{r^*_{t + 1}} \leq S^* - w_{r^*_t} \leq S^*
+\end{equation}
+
+Note também que se $c_{r^*_{t + 1}} \leq S^* - w_{r^*_t}$ e $c_{r^*_t} - w_{r^*_t} < c_{r^*_{t + 1}} - w_{r^*_{t + 1}}$, então: 
+
+$$c_{r^*_{t}} + w_{r^*_{t + 1}} < c_{r^*_{t + 1}} + w_{r^*_t} \leq S^*$$
+\begin{equation}\label{pd:eq4}
+  c_{r^*_{t}} < S^* - w_{r^*_{t + 1}}
+\end{equation}
+
+Percebemos que a condição \ref{pd:eq1} equivale a condição \ref{pd:eq3} e que \ref{pd:eq2} equivale a condição \ref{pd:eq4} numa permutação onde $r^*_t$ e $r^*{t + 1}$ estão trocados. Ou seja, a sequência $\widetilde{r} = \{r^*_1, ..., r^*_{t - 1}, r^*_{t + 1}, r^*_t, r^*_{t + 2}, ..., r^*_k\}$ é válida e remove pelo menos um par de índices que viola a ordenação gulosa. Assim, temos que $F(\widetilde{r}) < F(r^*)$, uma contradição na hipótese que $F(r^*)$ é mínimo.
+\end{proof}
+
+\begin{lema} \label{pd:impl}
+  Se $d, w, v$ são ordenados de tal forma que $c_{i} - w_{i} \geq c_{j} - w_{j}$ para $i \leq j$, então a recorrência \ref{pd:recok} encontra um subconjunto ótimo.
+\end{lema}
+\begin{proof}
+  Sabemos que a recorrência \ref{pd:recok} encontra o subconjunto ótimo caso a ordem de inserção dos itens seja a mesma que a ordem crescente dos seus índices.
+  Utilizando a proposição \ref{pd:proof}, para qualquer subconjunto ótimo de $d, w, v$ conforme sua ordenação, existe pelo menos uma permutação válida crescente.
+  Provando assim que a recorrência \ref{pd:recok} encontra um subconjunto ótimo.
+\end{proof}
+
+Exercício 1: Suponha que não haja a restrição $c_i \geq w_i$. Prove que o teorema \ref{pd:proof} continua válido.
+
+\subsection*{Análise e implementação}
+
+A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(nlgn)$ e memória $O(1)$. A recorrência \ref{pd:recok} pode ser resolvida com a modificação da Programação Dinâmica para o Problema da Mochila, que apresenta complexidade de tempo $O(nS)$ e de espaço, $O(S)$. O algoritmo apresenta complexidade tempo $O(nlgn + nS)$ e memória $O(S)$.
+
+ADICIONAR CODIGO
