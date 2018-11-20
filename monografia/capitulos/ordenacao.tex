@@ -1,0 +1,154 @@
+\chapter{Ordenação gulosa}
+\label{ordenacao}
+
+No capítulo anterior apresentamos um problema que utilizava um critério guloso para escolha direta da resposta. Nesse capítulo abordaremos um problema que envolve não um, mas dois critérios gulosos em etapas distintos do algoritmo para sua resolução, sendo que um deles é uma ordenação gulosa para a tomada de decisão do algoritmo.
+
+\subsection*{Enunciado}
+
+São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para serem completadas. A tarefa $i$ tem um prazo $p_i \in \{1, 2, ..., n\}$ e um multa $m_i \geq 0$ associada a ela. Desejamos escalonar cada tarefa a exatamente uma unidade de tempo em $\{1, 2, ..., n\}$ tal que a multa total seja mínima. Definimos se uma tarefa $i$ é escalonada para um tempo anterior ou igual ao seu prazo $p_i$, não pagamos a nada, caso contrário pagamos a multa $m_i$. A multa total é definida como a soma das multas das tarefas que não foram escalonadas antes de seus prazos.
+
+\subsection*{Exemplos}
+
+\begin{enumerate}
+    \item TODO
+\end{enumerate}
+
+\subsection*{Abordagens}
+
+Vamos supor que um conjunto de tarefas já foi escalonado e que desejamos escalonar uma tarefa $i$ buscando não pagar sua multa, se possível.
+
+Uma primeira observação a ser feita é que se não existe tempo $t \leq p_i$ "livre", isto é, que já não tenha sido escalonado para outra tarefa, estamos fadados a pagar a multa $m_i$. Assim, queremos colocar a tarefa $i$ num tempo que menos "atrapalhe" o escalonamento de outras tarefas. Para isso, podemos seguir uma estratégia de quanto mais tarde, melhor, escolhendo o maior tempo ainda disponível.
+
+Outra observação é que se existem múltiplos instantes de tempo $t \leq p_i$ disponíveis, mesmo que não paguemos a multa $m_i$, ainda nos resta encontrar qual o melhor instante de tempo para acomodá-la. De maneira análoga à observação anterior, gostaríamos de escalonar a tarefa $i$ para mais tarde possível que não pague multa, ou seja, o maior $t' \leq p_i$ disponível.
+
+Destas observações segue o seguinte algoritmo:
+
+\subsubsection*{Evitando multa e quanto mais tarde, melhor}
+
+Partindo da tarefa $1$, verifique se é possível não pagar sua multa. Em caso afirmativo, escalone para o maior tempo $t_1 \leq p_1$. Caso contrário, escalone para o tempo mais tarde ainda livre. Repita para $2$, $3$, ..., até $n$.
+
+Encontramos assim um critério de escolha de tempos caso valesse a hipótese de que em toda tarefa deve-se evitar pagar a multa. A hipótese, porém, é falsa.
+
+Um simples contra exemplo para tal algoritmo é o caso $p_1 = 1$, $m_1 = 1$, $p_2 = 1$, $m_2 = \infty$. A tarefa $1$ pode ser escalonada no tempo $t = 1 \leq p_1$ evitando pagar a multa $m_1 = 1$ mas fazendo com que a tarefa $2$ fosse escalonada fora do seu prazo, acarretando numa multa total muito maior. Neste exemplo, gostaríamos pagar a multa da tarefa $1$ pois isso possibilita evitar de pagar a multa da tarefa $2$, que é muito mais vantajosa globalmente.
+
+Percebemos que sem alguma observação adicional, a hipótese ser falta acarreta que o mínimo local, deixar de pagar a multa da tarefa atual, não acarreta mínimo global, menor soma das multas pagas. Como abordado na introdução, este é um princípio fundamental para aplicação de técnicas gulosas.
+
+Utilizando o contra exemplo acima, desenvolvemos a intuição de que vale a pena "acomodar" primeiro tarefas com maior $m_i$ para evitarmos pagar suas multas.
+
+\subsubsection*{Evitando a maior multa e quanto mais tarde, melhor}
+
+Processando as tarefas da maior multa para menor, verifique para cada uma se é possível não pagar sua multa. Em caso afirmativo, escalone tal tarefa para o maior tempo anterior ou igual ao seu prazo. Caso contrário, escalone-a para o tempo mais tarde ainda livre.
+
+Esta abordagem está correta, como provaremos a seguir.
+
+\subsection*{Demonstração}
+
+Assumiremos sem perda de generalidade que $m_1 \geq m_2 \geq ... \geq m_n$.
+
+Um escalonamento $e$ é uma permutação de $\{1, 2, ..., n\}$ tal que $e_i = j$ significa que a tarefa $i$ foi escalonada para o tempo $j$. Por definição, $e_i \neq e_j$ para todo $i \neq j$ e $e_i \in \{1, 2, ..., n\}$. Definimos como $c(e)$ a multa total deste escalonamento.
+
+Como vimos no capítulo anterior, podemos demonstrar que nosso algoritmo é produz um escalonamento ótimo através de um argumento de troca.
+
+Seja $e$ o escalonamento produzido pelo algoritmo descrito e $e^*$ o escalonamento ótimo com maior prefixo comum com $e$, ou seja, $e^*$ é tal que $c(e^*)$ é mínimo e $e_i = e^*_i$ para todo $i \in [1, k - 1]$ com $k$ máximo.
+
+Se $e = e^*$, está provado. Caso contrário, seja $k$ o primeiro índice tal que $e_k \neq e^*_k$.
+
+Aqui é necessário fazer uma análise caso a caso.
+
+\subsubsection*{Caso $e_k < e^*_k$ e tarefa $k$ não paga multa em $e$}
+
+Por definição, $e_k$ é o último tempo possível em que a $k$-ésima tarefa pode ser escalonada sem multa. Assim, a $k$-ésima tarefa paga multa em $e^*$ mas não em $e$.
+
+Seja $x$ a tarefa tal que $e^*_x = e_k$. Montando um escalonamento $\widetilde{e}$ trocando os tempos das tarefas $x$ e $k$ em $e^*$, temos que a tarefa $k$ agora não cobra multa, já que $\widetilde{e}_k = e_k$ e a tarefa $x$ pode cobrar ou não, já que $\widetilde{e}_x > e^*_x$.
+
+Ora mas, por hipótese, vale que $m_x \leq m_k$. Da identidade:
+
+$$c(e^*) - m_k \leq c(\widetilde{e}) \leq c(e^*) - m_k + m_x \leq c(e^*)$$
+
+E do fato que $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, há uma contradição.
+
+\subsubsection*{Caso $e_k < e^*_k$ e tarefa $k$ paga multa em $e$}
+
+Se a tarefa $k$ paga multa em $e$ e $e_k < e^*_k$, ela paga multa em $e^*$, o que é uma contradição na escolha do algoritmo, já que $e_k$ é o maior instante de tempo livre.
+
+\subsubsection*{Caso $e_k > e^*_k$ e tarefa $k$ não paga multa em $e$}
+
+Se a tarefa $k$ não paga multa em $e$ e $e_k > e^*_k$, ela não paga multa em $e^*$. Seja $x$ a tarefa tal que $e^*_x = e_k$. Montando um escalonamento $\widetilde{e}$ trocando os tempos das tarefas $x$ e $k$ em $e^*$, temos que a tarefa $k$ continua não cobrando multa, já que $\widetilde{e}_k = e_k$ e se a tarefa $x$ não cobrava multa em $e^*$, não cobra multa em $\widetilde{e}$, já que $\widetilde{e}_x = e^*_k \leq e^*_x$.
+
+Analogamente ao caso anterior, temos que $c(\widetilde{e}) \leq c(e^*)$ e $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, seguindo assim uma contradição.
+
+\subsubsection*{Caso $e_k > e^*_k$ e tarefa $k$ paga multa em $e$}
+
+Seja $x$ a tarefa tal que $e^*_x = e_k$. Montando um escalonamento $\widetilde{e}$ trocando os tempos das tarefas $x$ e $k$ em $e^*$, temos que a tarefa $k$ cobra multa, já que $\widetilde{e}_k = e_k$ e se a tarefa $x$ não cobrava multa em $e^*$, não cobra multa em $\widetilde{e}$, já que $\widetilde{e}_x = e^*_k \leq e^*_x$.
+
+Da mesma forma que o caso anterior, temos que $c(\widetilde{e}) \leq c(e^*)$ e $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, seguindo assim uma contradição.
+
+Como em todos os quatro casos chegamos numa contradição, o algoritmo produz a resposta ótima.
+
+\subsection*{Implementação e análise}
+
+Para implementação deste problema, podemos montar um vetor $escalonamento$ tal que $escalonamento[j] = i$ indica que a tarefa $i$ foi atribuída ao tempo $j$. Se o tempo $j$ não foi escalonado para nenhuma tarefa numa dada iteração, assumimos que $escalonamento[j] = 0$.
+
+Para cada tarefa $i$, montaremos uma tripla $v_i = (m = m_i, p = p_i, indice = i)$. Ordenaremos tais triplas em ordem decrescente de $m$, com empates resolvidos ao acaso. 
+
+Agora, processando a partir da tripla com maior multa até a menor, para cada tarefa $i$, procuramos se existe $escalonamento[j] = 0$ tal que $j \leq m_i$. Se existe, tomamos o maior $j$ que satisfaz tal condição e atualizamos $escalonamento[j] = i$. Caso contrário, tomamos o $j$ o maior tempo tal que $escalonamento[j] = 0$ e atualizamos $escalonamento[j] = i$. Cada tarefa requer $O(n)$ para encontrar tal $j$, resultando no complexidade de tempo $O(n^2)$.
+
+\begin{algorithm}[H]
+\caption{Solução gulosa ingênua para o Problema \ref{ordenacao}}
+\label{ordenacao:code_naive}
+\begin{algorithmic}[1]
+\Function{\textsc{Resolve}}{v, n}
+    \State $Ordene(v)$
+    \State $escalonamento \rec \{0\}^n$
+    \For{$i$ de $1$ até $n$}
+        \For{$j$ de $n$ até $1$}
+            \If{$escalonamento[j] = 0$}
+                \State $t \rec j$
+                \State $break$
+            \EndIf
+        \EndFor
+        \For{$j$ de $v[i].p$ até $1$}
+            \If{escalonamento[j] = 0}
+                \State $t \rec j$
+                \State $break$
+            \EndIf
+        \EndFor
+        \State $escalonamento[t] \rec v[i].indice$
+    \EndFor
+    \State \Return escalonamento
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+O gargalo do algoritmo é a escolha do tempo, já que a ordenação das tarefas é $O(nlgn)$. Podemos otimizar a escolha do tempo através do uso de uma estrutura de dados auxiliar que consegue realizar rapidamente as operações de inserção, remoção, retornar o maior elemento no conjunto e retornar o maior elemento menor que um dado número. Um exemplo de tal estrutura é uma Árvore de Busca Binária, que realiza todas as operações descritas acima em $O(lgn)$, resultando numa complexidade total de $O(nlgn)$.
+
+\begin{algorithm}[H]
+\caption{Solução gulosa para o Problema \ref{ordenacao}}
+\label{ordenacao:code}
+\begin{algorithmic}[1]
+\Function{\textsc{Resolve}}{v, n}
+    \State $Ordene(v)$
+    \State $escalonamento \rec \{0\}^n$
+    \State $abb \rec ArvoreBuscaBinaria(\{1, 2, ..., n\})$
+    \For{$i$ de $1$ até $n$}
+        \State $t \rec abb.MaiorMenor(v[i].p)$
+        \If{$t < v[i].p$}
+            \State $escalonamento[t] \rec v[i].indice$
+        \Else
+            \State $t \rec abb.Maior()$
+            \State $escalonamento[t] \rec v[i].indice$
+        \EndIf
+        \State $abb.Deletar(t)$
+    \EndFor
+    \State \Return escalonamento
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection*{Observações finais}
+
+Percebemos que este problema é mais sofisticado comparado ao que foi apresentado no capítulo anterior. Diferentemente dos saltos, que apresentavam uma estrutura de escolhas independentes, agora precisamos lidar com o fato de que a escolha de um escalonamento para um conjunto de tarefas influencia a escolha para próxima tarefa.
+
+Para remover esta dependência entre tarefas, precisávamos não só escolher um escalonamento para cada tarefa, mas também em que ordem essas escolhas eram feitas.
+
+Além disso, foi necessário introduzir o uso de estruturas de dados mais sofisticadas na implementação para reduzir a complexidade computacional.
