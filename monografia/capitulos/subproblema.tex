@@ -91,9 +91,9 @@ Como o algoritmo \ref{subproblema:algo} utiliza o menor número de operações, 
         \EndFor
     \EndFor
     \If{$X \geq 0$}
-        \Return True
+        \State \Return True
     \Else
-        \Return False
+        \State \Return False
     \EndIf
 \EndFunction
 \Function{\textsc{Resolve}}{h, n, X, D}
@@ -136,9 +136,9 @@ Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a uti
         \State $preguica[min(i + D, n + 1)] \rec preguica[min(i + D, n + 1)] + 1$
     \EndFor
     \If{$X \geq 0$}
-        \Return True
+        \State \Return True
     \Else
-        \Return False
+        \State \Return False
     \EndIf
 \EndFunction
 \end{algorithmic}
