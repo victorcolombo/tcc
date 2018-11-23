@@ -3,19 +3,23 @@
 
 \subsection*{Introdução}
 
-Na Introdução apresentamos Programação Dinâmica como uma abordagdem paralela a gulosa para resolução de problemas de otimização. Neste capítulo mostraremos que, na verdade, é possível aliar ambas as técnicas.
+Quanto pensamos no escopo de problemas de otimização, pensamos em Programação Dinâmica como uma abordagem completamente disjunta da abordagem gulosa. Neste capítulo mostraremos que, na verdade, é possível aliar ambas as técnicas.
 
 Quando resolvemos problemas como o Problema da Mochila ou o Problema do Troco, fazemos a hipótese de que a ordem em que os itens ou moedas são selecionados não importa, já que estamos interessados apenas no subconjunto final de itens.
 
-A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzí-lo ao problema original utilizando uma técnica gulosa.
+A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzi-lo ao problema original utilizando uma técnica gulosa.
 
 \subsection*{Enunciado}
 
-Existe uma mochila vazia de tamanho $S$ e $n$ itens que desejamos colocar nesta mochila. Cada item tem dois pesos atrelados a ele: $w_i$, o peso do item após ser colocado na mochila, e $c_i$, o peso do item antes de ser colocado na mochila. Além disso, cada item tem um valor atrelado $v_i$ a ele.
+Um mochileiro pretende acampar e precisa decidir quais itens colocará em sua mochila e em que ordem, buscando maximizar a soma dos valores destes. Ele escolhe adicionar um item baseado no peso estimado deste e quanto espaço restante há na mochila. Após adicionado, o mochileiro percebe que o item tem peso diferente do estimado, mas não pode mais removê-lo.
 
-Um item pode ser colocado na mochila se existe espaço restante na mochila é maior que $c_i$. Após colocado, ele ocupa o peso $w_i$.
+Alternativamente, existe uma mochila vazia de tamanho $S$ e $n$ itens que desejamos colocar nesta mochila.
 
-Deseja-se decidir que itens serão adicionados na mochila e sua ordem, respeitando as restrições de peso e que somem o valor máximo.
+Cada item tem dois pesos atrelados a ele: $w_i$, o peso do item após ser colocado na mochila, e $c_i$, o peso do item antes de ser colocado na mochila. Além disso, cada item tem um valor $v_i$ atrelado a ele.
+
+Um item pode ser colocado na mochila se o espaço restante na mochila é maior que $c_i$. Após colocado, ele ocupa o peso $w_i$.
+
+Deseja-se decidir quais itens serão adicionados na mochila e sua ordem, respeitando as restrições de peso e que somem o valor máximo.
 
 Formalmente, são dados um inteiro $S$ e três vetores contendo $n$ inteiros positivos cada: $w = \{w_1, w_2, ..., w_n\}$, $v = \{v_1, v_2, ..., v_n\}$, $c = \{c_1, c_2, ..., c_n\}$, onde $c_i \geq w_i$ para todo $i \in [1, n]$. Seja $r = \{r_1, r_2, ..., r_k\}$, $k \leq |I|$, uma permutação de um subconjunto $I \subseteq [1, n]$. 
 
@@ -26,23 +30,23 @@ Definimos o valor de um subconjunto como:
 \begin{equation} \label{pd:val}
   V(I) =
   \begin{cases}
-  0                      & I \text{não é válido} \\
-  \sum_{e \in I} v_{e}   & I \text{é válido} \\
+  0                      & I\quad\text{não é válido} \\
+  \sum_{e \in I} v_{e}   & I\quad\text{é válido} \\
   \end{cases}
 \end{equation}
 
-Dizemos que $I$ é um $\textbf{subconjunto ótimo}$ se $V(I)$ é máximo. Desejamos encontrar um subconjunto ótimo $I$.
+Dizemos que um subconjunto válido $I$ é ótimo se $V(I)$ é máximo. Desejamos encontrar um subconjunto ótimo $I$.
 
 \subsection*{Exemplos}
 
 \begin{enumerate}
-    \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = w = \{1, 2, 2, 4\}$, tem uma solução ótima $I = \{1, 2, 3\}$, $r = \{1, 2, 3\}$, $V(I) = 1 + 2 + 3 = 6$. Vale notar que $r = \{3, 1, 2\}$ e $r = \{3, 2, 1\}$ também são permutações válidas de $I$.
+    \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = w = \{1, 2, 2, 4\}$, tem uma solução ótima $I = \{1, 2, 3\}$, $r = \{1, 2, 3\}$, $V(I) = 1 + 2 + 3 = 6$. Vale notar que $r = \{3, 1, 2\}$ e $r = \{3, 2, 1\}$ também são permutações válidas de $I$ de mesmo valor.
     \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = \{3, 1, 3, 1\}$, $w = \{1, 2, 2, 4\}$, tem uma solução ótima, $I = \{1, 2, 3\}$, $r = \{3, 1, 2\}$, $V(I) = 1 + 2 + 3 = 6$. Desta vez, porém, a ordem importa, já que $r = \{1, 2, 3\}$ e $r = \{3, 2, 1\}$ infringem a condição dos pesos, sendo permutações inválidas de $I$. \label{pd:ex2}
 \end{enumerate}
 
 \subsection*{Observações iniciais}
 
-Primeiramente é necessário observar que se $c = w$, o problema é uma instância do Problema da Mochila clássico. Este, por sua vez, pode ser resolvido com uma Programação Dinâmica de recorrência:
+Primeiramente é necessário observar que se $c = w$, o problema é uma instância do Problema da Mochila clássico. Este, por sua vez, pode ser resolvido com um algoritmo de Programação Dinâmica baseado na recorrência:
 
 \begin{equation} \label{pd:recnaiv}
   f(i, s, v, w, n) =
@@ -52,6 +56,8 @@ Primeiramente é necessário observar que se $c = w$, o problema é uma instânc
   f(i + 1, s, v, w, n)                                          & \text{c.c.} \\
   \end{cases}
 \end{equation}
+
+Onde $f(i, s, v, w, n)$ é o maior valor de uma mochila com $s$ de espaço e itens disponíveis de valores $v_i, v_{i + 1}, ..., v_n$, pesos $w_i, w_{i + 1}, ..., w_n$.
 
 Uma ideia inicial para adaptar o algoritmo clássico seria modificar a condição de $w_i \leq s$ para $c_i \leq s$, como mostrado abaixo:
 
@@ -64,9 +70,11 @@ Uma ideia inicial para adaptar o algoritmo clássico seria modificar a condiçã
   \end{cases}
 \end{equation}
 
- A priori, esta modificação parece suficiente para compreender as restrições impostas pelo enunciado. Esta modificação por si só, porém, não é suficiente. 
+Onde $g(i, s, v, w, c, n)$ é o maior valor de uma mochila com $s$ de espaço e itens disponíveis de valores $v_i, v_{i + 1}, ..., v_n$, pesos após colocados na mochila $w_i, w_{i + 1}, ..., w_n$ e pesos antes de colocados na mochila $c_i, c_{i + 1}, ..., c_n$.
 
-A recorrência \label{pd:recnaiv} assume que, como a ordem de inserção no problema original não importa, é possível fixar uma ordem arbitrária. Neste caso, são os itens do menor ao maior índice. Como notado no \hyperref[pd:ex2]{Exemplo 2}, isso não é verdade para este problema. Não basta selecionar o subconjunto de itens a serem inseridos na mochila mas é também necessário encontrar a ordem ótima de inserção destes itens na mochila.
+A priori, esta modificação parece suficiente para compreender as restrições impostas pelo enunciado. Esta modificação por si só, porém, não é suficiente. 
+
+A recorrência \ref{pd:recnaiv} assume que, como a ordem de inserção no problema original não importa, é possível fixar uma ordem arbitrária. Neste caso, são os itens do menor ao maior índice, já que $i$ só cresce. Como notado no \hyperref[pd:ex2]{Exemplo 2}, isso não é verdade para este problema. Não basta selecionar o subconjunto de itens a serem inseridos na mochila mas é também necessário encontrar a ordem ótima de inserção destes itens na mochila.
 
 Para lidar com isso, poderíamos aplicar a recorrência \label{pd:recnaiv} para toda escolha de permutação de $d, w, v$. Isto nos daria uma solucão de complexidade $O(nSn!)$ em tempo, mas é possível fazer melhor que isso.
 
@@ -82,9 +90,9 @@ Intuitivamente, essa ordem representa inserir o elemento que é mais pesado ante
 
 \subsubsection*{Decrescente em $c - w$}
 
-Intuitivamente, essa ordem representa inserir o mais cedo possível itens que mais são pesados antes quando comparados com seus pesos após serem colocados, aproveitando quando a mochila tem espaço para satisfazer a condição anterior a inserção e ocupando comparativamente pouco espaço após colocá-los.
+Intuitivamente, essa ordem representa inserir o mais cedo possível itens que têm a maior diferença de peso antes e depois de serem colocados, aproveitando quando a mochila tem espaço para satisfazer a condição anterior a inserção e ocupando comparativamente pouco espaço após colocá-los.
 
-Essa é, de fato, a ordem correta. Utilizaremos um argumento semelhante ao apresentado no capítulo 1, para demonstração.
+Essa é, de fato, a ordem correta. Utilizaremos para demonstração um argumento semelhante ao apresentado no capítulo \ref{salto}.
 
 \subsection*{Demonstração}
 
@@ -94,7 +102,7 @@ Definiremos uma função $F(r)$ como o número de pares de índices $(i, j)$, $i
 Se $I \subseteq [1, n]$ é um subconjunto ótimo de itens e $r$ é uma permutação de $I$ tal que $c_{r_i} - w_{r_i} \geq c_{r_j} - w_{r_j}$ para todo $i \leq j$, então $r$ é uma permutação válida.
 \end{theo}
 \begin{proof}
-Se $|I| = 1$, está provado. Caso contrário, suponha que $r$ não seja uma permutação válida. Por definição, $F(r) = 0$.
+Se $|I| = 1$, está provado. Se $|I| \neq 1$, suponha que $r$ não seja uma permutação válida. Por definição, $F(r) = 0$.
 
 Seja $r^*$ uma permutação válida de $I$ com menor valor de $F(r^*) > 0$. Seja $t \in [1, |I| - 1]$ o primeiro índice tal que $c_{r^*_t} - w_{r^*_t} < c_{r^*_{t + 1}} - w_{r^*_{t + 1}}$.
 
@@ -136,6 +144,32 @@ Exercício 1: Suponha que não haja a restrição $c_i \geq w_i$. Prove que o te
 
 \subsection*{Análise e implementação}
 
-A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(nlgn)$ e memória $O(1)$. A recorrência \ref{pd:recok} pode ser resolvida com a modificação da Programação Dinâmica para o Problema da Mochila, que apresenta complexidade de tempo $O(nS)$ e de espaço, $O(S)$. O algoritmo apresenta complexidade tempo $O(nlgn + nS)$ e memória $O(S)$.
+A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória $O(1)$.
 
-ADICIONAR CODIGO
+A recorrência \ref{pd:recok} pode ser resolvida com a modificação da Programação Dinâmica para o Problema da Mochila, que apresenta complexidade de tempo $O(nS)$ e de espaço, $O(S)$.
+
+O algoritmo apresenta complexidade tempo $O(n \lg n + nS)$ e memória $O(S)$ se implementado iterativamente e $O(nS)$ se implementado recursivamente.
+
+\begin{algorithm}[H]
+\caption{Solução para o Problema \ref{pd}}
+\label{pd:code}
+\begin{algorithmic}[1]
+\Function{\textsc{Mochila}}{i, s, v, w, c, n, memo}
+  \If {$i = n + 1$}
+    \State \Return $0$
+  \EndIf
+  \If{$memo[i][s] = -1$}
+    \State $memo[i][s] \rec Mochila(i + 1, s, v, w, c, n)$
+    \If{$s \geq c[i]$}
+      \State $memo[i][s] \rec max(memo[i][s], v[i] + Mochila(i + 1, s - w[i], v, w, c, n))$
+    \EndIf
+  \EndIf
+  \State \Return $memo[i][s]$
+\EndFunction
+\Function{\textsc{Resolve}}{v, w, c, S, n}
+    \State $Ordene(v, w, c)$ (decrescente em $c - w$) 
+    \State $memo \rec \{\{-1\}^S\}^n$
+    \State \Return $\textsc{Mochila}(1, S, v, w, c, n, memo)$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
