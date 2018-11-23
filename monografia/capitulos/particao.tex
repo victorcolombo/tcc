@@ -35,7 +35,7 @@ Problemas NP-completo são, à primeira vista, bastante atraentes para soluçõe
 
 \subsection*{Abordagens}\label{particao:abordagem}
 
-Um algoritmo guloso natural é, iterativamente, contruir as partições, começando com duas partições vazias, encaminhamos um elemento à partição com menor soma parcial, tentando deixar as partições mais \emph{"equilibradas"} possível a todo momento, isto é, minizando a diferença entre as partições em toda iteração.
+Um algoritmo guloso natural é, iterativamente, contruir as partições, começando com duas partições vazias, encaminhamos um elemento à partição com menor soma parcial, tentando deixar as partições mais \quotes{equilibradas} possível a todo momento, isto é, minizando a diferença entre as partições em toda iteração.
 
 Além disso, como estamos trabalhando com restrição na entrada em função do índice, temos a intuição de que a ordem em que esses elementos são adicionados importa. Daí seguem duas opções imediatas: iterando crescentemente de $1$ a $n$ ou iterando descrescentemente de $n$ a $1$.
 
@@ -70,7 +70,7 @@ $S_i$ é a soma acumulada do prefixo $v_1, v_2, ..., v_i$ de $V$: $S_i = \sum_{j
 \end{defi}
 
 \begin{defi}
-$a_i$ é a "folga" de $A$, isto é, a diferença entre o valor esperado da partição e a soma dos elementos que já foram encaminhados a $A$, depois do processamento dos elementos $v_{i + 1}, v_{i + 2}, ..., v_{n}$ pelo algoritmo.
+$a_i$ é a \quotes{folga} de $A$, isto é, a diferença entre o valor esperado da partição e a soma dos elementos que já foram encaminhados a $A$, depois do processamento dos elementos $v_{i + 1}, v_{i + 2}, ..., v_{n}$ pelo algoritmo.
 Analogamente, definimos $b_i$ para a partição $B$.
 \end{defi}
 
@@ -101,13 +101,13 @@ Assim, podemos escrever $S_i$ como:
     S_i = S_{i - 1} + v_i \geq 2*v_i - 1
 \end{equation}
 
-Vamos assumir que nem $A$, nem $B$, tenham "folga" suficiente para acomodar $v_i$. Provaremos por contradição, separado em 2 casos:
+Vamos assumir que nem $A$, nem $B$, tenham \quotes{folga} suficiente para acomodar $v_i$. Provaremos por contradição, separado em 2 casos:
 
 \subsubsection*{Caso 1: $a_i$ e $b_i$ tem a mesma paridade.}
 
 Se $a_i$ e $b_i$ tem a mesma paridade, $S_i$ é par.
 
-Como nenhuma partição tem "folga" para acomodar $v_i$, vale que $a_i < v_i$ e $b_i < v_i$. Somando as equações, vale que $a_i + b_i < 2*v_i$ ou também $a_i + b_i \leq 2*v_i - 1$.
+Como nenhuma partição tem \quotes{folga} para acomodar $v_i$, vale que $a_i < v_i$ e $b_i < v_i$. Somando as equações, vale que $a_i + b_i < 2*v_i$ ou também $a_i + b_i \leq 2*v_i - 1$.
 
 Utilizando \ref{eq:1} e \ref{eq:2}, segue que $a_i + b_i \geq 2*v_i - 1$.
 
@@ -119,7 +119,7 @@ Contradição, já que $2*v_i - 1$ é ímpar e $S_i$ é par.
 
 \subsubsection*{Caso 2: $a_i$ e $b_i$ tem diferentes paridades.}
 
-Como nenhuma partição tem "folga" para acomodar $v_i$, temos que $a_i < v_i$ e $b_i < v_i$.
+Como nenhuma partição tem \quotes{folga} para acomodar $v_i$, temos que $a_i < v_i$ e $b_i < v_i$.
 
 Ora mas como $a_i$ e $b_i$ tem paridades diferentes, deve valer que $a_i < v_i$ e $b_i < v_i - 1$ ou $a_i < v_i - 1$ e $b_i < v_i$.
 
@@ -131,7 +131,7 @@ Assim, se $a_i + b_i \geq 2*v_i - 1$ e $a_i + b_i \leq 2*v_i - 2$, há uma contr
 
 \end{proof}
 
-Com a proposição \ref{particao:proof} provada agora podemos encontrar um algoritmo para resolver o problema. Como mostramos que há "folga" de tamanho pelo menos $v_i$ em alguma das partições em toda iteração, basta que, a cada iteração, encaminhemos o elemento atual para uma das partições com "folga" suficiente. A seguir, descrevemos essa ideia em pseudocódigo:
+Com a proposição \ref{particao:proof} provada agora podemos encontrar um algoritmo para resolver o problema. Como mostramos que há \quotes{folga} de tamanho pelo menos $v_i$ em alguma das partições em toda iteração, basta que, a cada iteração, encaminhemos o elemento atual para uma das partições com \quotes{folga} suficiente. A seguir, descrevemos essa ideia em pseudocódigo:
 
 \begin{algorithm}[h]
 \caption{Solução gulosa para o Problema \ref{particao}}
@@ -186,8 +186,8 @@ Se $a_i > v_i$ e $b_i > v_i$, então $v_i$ pode ser encaminhado para qualquer pa
 
 Note que, tanto na construção do algoritmo \ref{particao:code} quanto na demonstração da proposição \ref{particao:proof}, não fizemos uso da ideia de encaminhar para a partição com menor soma parcial (ou maior folga parcial), como discutida no início da seção \hyperref[particao:abordagem]{Abordagens}. Tal ideia, porém, dá um critério para decidir qual partição o elemento deve ir, já que a maior folga parcial é sempre positiva.
 
-No algoritmo desenvolvido, há a prioridade sempre de encaminhar o elemento para partição $A$ e, caso não houver "folga" suficiente, envia para partição $B$. Esta escolha foi, todavia, arbitrária, já que um outro algoritmo não intuitivo que respeita a proposição seria encaminhar o elemento aleatoriamente entre as partições com "folga" de tamanho pelo menos $v_i$ para todo $i$.
+No algoritmo desenvolvido, há a prioridade sempre de encaminhar o elemento para partição $A$ e, caso não houver \quotes{folga} suficiente, envia para partição $B$. Esta escolha foi, todavia, arbitrária, já que um outro algoritmo não intuitivo que respeita a proposição seria encaminhar o elemento aleatoriamente entre as partições com \quotes{folga} de tamanho pelo menos $v_i$ para todo $i$.
 
 \subsection*{Análise}
 
-Para encontrar a partição basta iterar em todos os elementos de maneira reversa, mantendo um contador representando a "folga" de um dos conjuntos, do mesmo jeito que foi feito na demonstração. Pode ser implementado em tempo linear utilizando memória constante.
+Para encontrar a partição basta iterar em todos os elementos de maneira reversa, mantendo um contador representando a \quotes{folga} de um dos conjuntos, do mesmo jeito que foi feito na demonstração. Pode ser implementado em tempo linear utilizando memória constante.

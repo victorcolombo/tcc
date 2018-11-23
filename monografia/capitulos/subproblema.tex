@@ -17,7 +17,7 @@ Queremos encontrar o maior $H$ tal que o $h_i \geq H$ para qualquer $i \in [1, n
 
 \subsection*{Abordagens}
 
-Imediatamente conseguimos perceber que este problema tem muitas "partes soltas", dificultando a aplicação direta de um algoritmo guloso. Precisamos maximizar $H$, que depende do $h$ final, que por sua vez depende das operações escolhidas.
+Imediatamente conseguimos perceber que este problema tem muitas \quotes{partes soltas}, dificultando a aplicação direta de um algoritmo guloso. Precisamos maximizar $H$, que depende do $h$ final, que por sua vez depende das operações escolhidas.
 
 Uma abordagem útil quando estamos estagnados é modificar o problema para outro que parece mais simples e, depois de resolvê-lo, tentar generalizar ou modificar a solução para resolver o problema original. Em particular, vamos fixar a variável resposta $H$.
 
@@ -27,9 +27,9 @@ Suponha que $H$ é fixo. Gostaríamos de saber se é possível transformar $h$ n
 
 A partir daqui conseguimos ter algumas ideias gulosas. Primeiramente precisamos modificar $h_1$ para que $h_1 \geq H$.
 
-Se, inicialmente, $h_1 \geq H$, não gostaríamos de "gastar" nenhuma operação em algum intervalo que contém $h_1$. Se $h_1 < H$, precisamos pelo menos $H - h_1$ operações para que $h_1$ satisfaça a condição. Note que somente o intervalo $[1, min(1 + D, n)]$ contém o índice $1$, nos poupando da escolha do intervalo.
+Se, inicialmente, $h_1 \geq H$, não gostaríamos de \quotes{gastar} nenhuma operação em algum intervalo que contém $h_1$. Se $h_1 < H$, precisamos pelo menos $H - h_1$ operações para que $h_1$ satisfaça a condição. Note que somente o intervalo $[1, min(1 + D, n)]$ contém o índice $1$, nos poupando da escolha do intervalo.
 
-Depois de "arrumar" $h_1$, repetimos o mesmo processo para $h_2$, $h_3$ e assim por diante. Ao "arrumar" todos os elementos de $h$, se o número de operações aplicadas forem menores ou iguais $X$, $H$ é uma resposta viável.
+Depois de \quotes{arrumar} $h_1$, repetimos o mesmo processo para $h_2$, $h_3$ e assim por diante. Ao \quotes{arrumar} todos os elementos de $h$, se o número de operações aplicadas forem menores ou iguais $X$, $H$ é uma resposta viável.
 
 \subsubsection*{Maximizando $H$}
 

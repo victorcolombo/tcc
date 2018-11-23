@@ -17,7 +17,7 @@ São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para ser
 
 Vamos supor que um conjunto de tarefas já foi escalonado e que desejamos escalonar uma tarefa $i$ buscando não pagar sua multa, se possível.
 
-Uma primeira observação a ser feita é que se não existe tempo $t \leq p_i$ "livre", isto é, que já não tenha sido escalonado para outra tarefa, estamos fadados a pagar a multa $m_i$. Assim, queremos colocar a tarefa $i$ num tempo que menos "atrapalhe" o escalonamento de outras tarefas. Para isso, podemos seguir uma estratégia de quanto mais tarde, melhor, escolhendo o maior tempo ainda disponível.
+Uma primeira observação a ser feita é que se não existe tempo $t \leq p_i$ \quotes{livre}, isto é, que já não tenha sido escalonado para outra tarefa, estamos fadados a pagar a multa $m_i$. Assim, queremos colocar a tarefa $i$ num tempo que menos \quotes{atrapalhe} o escalonamento de outras tarefas. Para isso, podemos seguir uma estratégia de quanto mais tarde, melhor, escolhendo o maior tempo ainda disponível.
 
 Outra observação é que se existem múltiplos instantes de tempo $t \leq p_i$ disponíveis, mesmo que não paguemos a multa $m_i$, ainda nos resta encontrar qual o melhor instante de tempo para acomodá-la. De maneira análoga à observação anterior, gostaríamos de escalonar a tarefa $i$ para mais tarde possível que não pague multa, ou seja, o maior $t' \leq p_i$ disponível.
 
@@ -33,7 +33,7 @@ Um simples contra exemplo para tal algoritmo é o caso $p_1 = 1$, $m_1 = 1$, $p_
 
 Percebemos que sem alguma observação adicional, a hipótese ser falta acarreta que o mínimo local, deixar de pagar a multa da tarefa atual, não acarreta mínimo global, menor soma das multas pagas. Como abordado na introdução, este é um princípio fundamental para aplicação de técnicas gulosas.
 
-Utilizando o contra exemplo acima, desenvolvemos a intuição de que vale a pena "acomodar" primeiro tarefas com maior $m_i$ para evitarmos pagar suas multas.
+Utilizando o contra exemplo acima, desenvolvemos a intuição de que vale a pena \quotes{acomodar} primeiro tarefas com maior $m_i$ para evitarmos pagar suas multas.
 
 \subsubsection*{Evitando a maior multa e quanto mais tarde, melhor}
 

@@ -39,14 +39,14 @@ Chamamos este $u$ de solução ótima para o problema.
 
 \subsection*{Observações iniciais}
 
-Primeiramente devemos notar que nunca vale a pena \textit{"voltar"}, isto é, escolher um número menor que o escolhido anteriormente, pois isto aumentaria desnecessariamente a sequência, já que poderíamos descartar a escolha anterior e escolher apenas o menor número.
+Primeiramente devemos notar que nunca vale a pena \textit{\quotes{voltar}}, isto é, escolher um número menor que o escolhido anteriormente, pois isto aumentaria desnecessariamente a sequência, já que poderíamos descartar a escolha anterior e escolher apenas o menor número.
 
-Além disso, devemos fazer a observação que, para todo $y \in v$, nenhum número maior que $y$ pode ser sucessor de algum número menor que $y$ sem que pudesse ser sucessor do próprio $y$. Ou seja, intuitivamente não existe \textit{"vantagem"} em escolher um número menor que o maior possível.
+Além disso, devemos fazer a observação que, para todo $y \in v$, nenhum número maior que $y$ pode ser sucessor de algum número menor que $y$ sem que pudesse ser sucessor do próprio $y$. Ou seja, intuitivamente não existe \textit{\quotes{vantagem}} em escolher um número menor que o maior possível.
 
 \subsection*{Abordagem}
 \label{salto:abor}
 
-Partindo das observações anteriores, uma solução intuitiva é \textit{"ir mais para direita possível"}: Partindo de $u_1 = v_1$, escolha o próximo $u_{i + 1}$ tal que a diferença ao elemento anterior, $u_{i + 1} - u_i$, seja máxima e menor ou igual a $\Delta$, repetindo até escolher $v_n$.
+Partindo das observações anteriores, uma solução intuitiva é \textit{\quotes{ir mais para direita possível}}: Partindo de $u_1 = v_1$, escolha o próximo $u_{i + 1}$ tal que a diferença ao elemento anterior, $u_{i + 1} - u_i$, seja máxima e menor ou igual a $\Delta$, repetindo até escolher $v_n$.
 
 Neste caso, felizmente, o primeiro algoritmo considerado é de fato o correto. Agora o trabalho é reduzido a formalizar e demonstrar sua corretude.
 
