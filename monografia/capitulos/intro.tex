@@ -1,5 +1,26 @@
 \chapter{Introdução}
 \label{intro}
 
+Algoritmos gulosos são uma popular escolha para resolução de problemas de otimização, com um dos primeiros registros de sua utilização datando de 1952, com a Codificação de Huffman~\cite{huffman1952method}.
 
-TODO
+Abordagens gulosas nem sempre produzem a solução ótima, mas quando produzem, são mais eficientes quando comparadas com, por exemplo, Programação Dinâmica ou força bruta.
+
+Eles são muito difíceis de se definir precisamente. Há pesquisa para formalizar a classe de problemas considerados gulosos, como os trabalhos de Edmonds~\cite{Edmonds1971} e Lawler~\cite{lawler2001combinatorial} na teoria dos matroides, e o trabalho de Borodin, Nielsen e Rackoff~\cite{Borodin2003} na definição de \quotes{guloso}.
+
+Em seu livro didático, Cormen~\cite{CLRS} define algoritmos gulosos como algoritmos que apresentam \emph{propriedade de escolha gulosa}: conseguimos chegar na solução ótima globalmente através de escolhas ótimas localmente (escolhas gulosas). Isto é, em contraste com a programação dinâmica, que cada escolha depende dos subproblemas, num algoritmo guloso fazemos a escolha que parece melhor para o problema atual, sem considerar os subproblemas.
+
+\section{Objetivos}
+
+Neste trabalho apresentamos algoritmos gulosos de uma maneira pragmática, a partir de problemas de competições de programação cometitiva, como a ACM-ICPC, que, diferentemente dos que são abordados nos livros-texto, apresentam caráter multidisciplinar.
+
+Além de apresentar os conceitos paralelamente as soluções para os problemas, focamos também em desenvolver o raciocínio e a intuição por trás das técnicas gulosas, a fim de criar uma ferramenta sistemática para resolvê-los.
+
+\section{Estrutura do texto}
+
+No capítulo \ref{salto} apresentamos o argumento de troca, uma ferramento versátil para demonstração de corretude de algoritmos gulosos que será utilizada nos demais capítulos.
+
+Nos capítulos \ref{ordenacao} e \ref{subproblema} investigamos como podemos reduzir problemas a ponto de aceitarem soluções gulosas. Discutimos também como a utilização de estruturas de dados auxiliares aliado ao algoritmo guloso pode diminuir sua complexidade computacional.
+
+No capítulo \ref{pd} mostramos como algoritmos gulosos e programação dinâmica, duas técnicas distintas para resolução de problemas de otimização, podem ser utilizadas em conjunto.
+
+No capítulo \ref{particao} exploramos como restrições na entrada de um prolema podem mudar completamente a natureza de sua solução, podendo admitir soluções gulosas que não seriam possíveis sem as restrições.
