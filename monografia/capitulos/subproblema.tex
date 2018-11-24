@@ -118,7 +118,7 @@ A função \textsc{Resolve}, por sua vez, chama \textsc{Valido} e reduz o espaç
 
 Embora a solução seja polinomial pois $D$ é limitado por $n$, ainda há como melhorar a solução. Podemos desconfiar que \textsc{Valido} tenha espaço para otimizações. 
 
-Precisamos de uma estrutura de dados que suporta incrementar intervalo e acessar posições do vetor de forma eficiente. Uma opção é utilizar uma Árvore de Segmentos com Propagação Preguiçosa, reduzindo a complexidade de cada operação de $O(D)$ para $O(\lg n)$, resultando na complexidade $O(n \lg n \lg X)$.
+Precisamos de uma estrutura de dados que suporta incrementar intervalo e acessar posições do vetor de forma eficiente. Uma opção é utilizar uma Árvore de Segmentos com Propagação Preguiçosa \cite{mehta2004handbook}, reduzindo a complexidade de cada operação de $O(D)$ para $O(\lg n)$, resultando na complexidade $O(n \lg n \lg X)$.
 
 Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a utilização de nenhuma estrutura de dados sofisticada. A observação essencial é estamos iterando nos vetor de maneira sequencial e todas as operações estão sendo feitas em ordem crescente da extremidade esquerda. Deste fato podemos utilizar uma ideia semelhante a Propagação Preguiçosa: manteremos um vetor que indica quantas operações terminam em cada índice. Com isso, basta manter acumulado, a cada iteração, quantas operações passaram por um elemento, modificando tal variável de acordo com as operações iniciadas e terminadas no índice atual.
 

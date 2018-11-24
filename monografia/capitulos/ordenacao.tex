@@ -120,7 +120,7 @@ Agora, processando a partir da tripla com maior multa até a menor, para cada ta
 \end{algorithmic}
 \end{algorithm}
 
-O gargalo do algoritmo é a escolha do tempo, já que a ordenação das tarefas é $O(n \lg n)$. Podemos otimizar a escolha do tempo através do uso de uma estrutura de dados auxiliar que consegue realizar rapidamente as operações de inserção, remoção, retornar o maior elemento no conjunto e retornar o maior elemento menor que um dado número. Um exemplo de tal estrutura é uma Árvore de Busca Binária, que realiza todas as operações descritas acima em $O(\lg n)$, resultando numa complexidade total de $O(n \lg n)$.
+O gargalo do algoritmo é a escolha do tempo, já que a ordenação das tarefas é $O(n \lg n)$. Podemos otimizar a escolha do tempo através do uso de uma estrutura de dados auxiliar que consegue realizar rapidamente as operações de inserção, remoção, retornar o maior elemento no conjunto e retornar o maior elemento menor que um dado número. Um exemplo de tal estrutura é uma Árvore de Busca Binária balanceada \cite{mehta2004handbook}, que realiza todas as operações descritas acima em $O(\lg n)$, resultando numa complexidade total de $O(n \lg n)$.
 
 \begin{algorithm}[H]
 \caption{Solução gulosa para o Problema \ref{ordenacao}}
