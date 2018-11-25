@@ -136,8 +136,6 @@ Percebemos que a condição \ref{pd:eq1} equivale a condição \ref{pd:eq3} e qu
   Provando assim que a recorrência \ref{pd:recok} encontra um subconjunto ótimo.
 \end{proof}
 
-Exercício 1: Suponha que não haja a restrição $c_i \geq w_i$. Prove que o teorema \ref{pd:proof} continua válido.
-
 \section{Implementação e análise}
 
 A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória $O(1)$.
@@ -169,3 +167,20 @@ O algoritmo apresenta complexidade tempo $O(n \lg n + nS)$ e memória $O(S)$ se 
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+\section{Exercícios}
+
+\subsection*{Teóricos}
+
+\begin{enumerate}
+  \item Suponha que não haja a restrição $c_i \geq w_i$. Prove que o teorema \ref{pd:proof} continua válido.
+\end{enumerate}
+
+\subsection*{Problemas}
+
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item \href{https://open.kattis.com/problems/installingapps}{Installing Apps} - Northwestern Europe Regional Contest 2017
+  \item \href{https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=5446}{Better Productivity} - Northwestern Europe Regional Contest 2015
+  \item \href{https://codeforces.com/gym/101081/problem/K}{Pope's work} - 2011 USP Try-outs
+\end{enumerate}
