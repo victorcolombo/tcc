@@ -5,12 +5,19 @@ No capítulo anterior apresentamos um problema que utilizava um critério guloso
 
 \section{Escalonamento minimizando a multa total}
 
-São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para serem completadas. A tarefa $i$ tem um prazo $p_i \in \{1, 2, ..., n\}$ e um multa $m_i \geq 0$ associada a ela. Desejamos escalonar cada tarefa a exatamente uma unidade de tempo em $\{1, 2, ..., n\}$ tal que a multa total seja mínima. Definimos se uma tarefa $i$ é escalonada para um tempo anterior ou igual ao seu prazo $p_i$, não pagamos a nada, caso contrário pagamos a multa $m_i$. A multa total é definida como a soma das multas das tarefas que não foram escalonadas antes de seus prazos.
+São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para serem completadas. A tarefa $i$ tem um prazo $p_i \in \{1, 2, ..., n\}$ e um multa $m_i \geq 0$ associada a ela. Desejamos escalonar cada tarefa a exatamente uma unidade de tempo em $\{1, 2, ..., n\}$ tal que a multa total seja mínima.
+
+Definimos que, se uma tarefa $i$ é escalonada para um tempo anterior ou igual ao seu prazo $p_i$, não pagamos a nada, caso contrário pagamos a multa $m_i$. A multa total é definida como a soma das multas das tarefas que não foram escalonadas antes de seus prazos.
 
 \subsection*{Exemplos}
 
 \begin{enumerate}
-    \item TODO
+    \item São dadas três tarefas: tarefa $1$ tem prazo $p_1 = 2$ e multa $m_1 = 1$, tarefa $2$ tem prazo $p_2 = 2$ e multa $m_2 = 2$, tarefa $3$ tem prazo $p_3 = 2$ e multa $m_3 = 3$.\\
+    Como todos as tarefas têm o mesmo prazo $2$, uma delas com certeza pagará multa. Para minimizar a multa total, basta fazer com que a tarefa de menor multa ser escalonada depois do prazo.\\
+    Assim, temos a multa mínima igual a $m_1 = 1$ no seguinte escalonamento: tarefa $3$ em $t = 1$, tarefa $2$ em $t = 2$ e tarefa $1$ em $t = 3$.\\
+    Note que o seguinte escalonamento também apresenta a mesma multa que o anterior: tarefa $2$ em $t = 1$, tarefa $3$ em $t = 2$, tarefa $1$ em $t = 3$.
+    \item São dadas três tarefas: tarefa $1$ tem prazo $p_1 = 1$ e multa $m_1 = 3$, tarefa $2$ tem prazo $p_2 = 2$ e multa $m_2 = 2$, tarefa $3$ tem prazo $p_3 = 3$ e multa $m_3 = 1$.\\
+    É possível ter multa total $0$ com o seguinte escalonamento: tarefa $1$ em $t = 1$, tarefa $2$ em $t = 2$ e tarefa $3$ em $t = 3$.
 \end{enumerate}
 
 \section{Desenvolvimento}
