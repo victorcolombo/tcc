@@ -132,7 +132,7 @@ Assim, se $a_i + b_i \geq 2*v_i - 1$ e $a_i + b_i \leq 2*v_i - 2$, há uma contr
 
 \end{proof}
 
-\section{Implementação}
+\section{Implementação e análise}
 
 Com a proposição \ref{particao:proof} provada agora podemos encontrar um algoritmo para resolver o problema. Como mostramos que há \quotes{folga} de tamanho pelo menos $v_i$ em alguma das partições em toda iteração, basta que, a cada iteração, encaminhemos o elemento atual para uma das partições com \quotes{folga} suficiente. A seguir, descrevemos essa ideia em pseudocódigo:
 
