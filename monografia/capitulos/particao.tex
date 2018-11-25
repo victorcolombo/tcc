@@ -1,7 +1,7 @@
 \chapter{Explorando restrições}
 \label{particao}
 
-\section{Problema da Partição}
+\section{Problema da Partição modificado}
 
 É dado um vetor de $n$ números inteiros, $V = \{v_1, v_2, ..., v_n\}$, tal que, para todo $i \in [1, n]$, vale que $1 \leq v_i \leq i$.
 
@@ -14,7 +14,7 @@ $$\sum_{i = 1}^n v_i*r_i = 0$$
 
 \begin{enumerate}[i)]
     \item A entrada $n = 4, V = \{1, 2, 3, 3\}$ não apresenta particionamento possível pois $1 + 2 + 3 + 3 = 9$ é ímpar.
-    \item A entrada $n = 4, V = \{1, 2, 3, 4\}$ apresenta o particionamento $r = \{-1, 1, 1, -1\}$. Note que o particionamento $r = \{1, -1, -1, 1\}$ também é válido, por simetria.
+    \label{particao:ex2}\item A entrada $n = 4, V = \{1, 2, 3, 4\}$ apresenta o particionamento $r = \{-1, 1, 1, -1\}$. Note que o particionamento $r = \{1, -1, -1, 1\}$ também é válido, por simetria.
     \item A entrada $n = 4, V = \{1, 1, 3, 3\}$ apresenta tanto o particionamento $r = \{-1, 1, -1, 1\}$ quanto $r = \{-1, 1, 1, -1\}$, ou seja, podem existir mútiplos particionamentos válidos, não necessáriamente simétricos.
     \item A entrada $n = 3, V = \{1, 1, 3\}$ não apresenta particionamento possível, pois $v_3 = 3 > 1 + 1$.
     \item A entrada $n = 3, V = \{1, 2, 4\}$ não é uma entrada válida já que não vale a restrição $1 \leq v_3 \leq 3$.
@@ -42,7 +42,7 @@ Além disso, como estamos trabalhando com restrição na entrada em função do 
 
 \subsubsection*{Iterando crescentemente}
 
-Podemos rapidamente descartar esta ordem retornando ao exemplo 2) que já analisamos. Na entrada $V = \{1, 2, 3, 4\}$.
+Podemos rapidamente descartar esta ordem retornando ao exemplo \ref{particao:ex2} que já analisamos. Na entrada $V = \{1, 2, 3, 4\}$.
 
 Encaminhamos o elemento $v_1 = 1$ para uma partição arbitrária, já que as duas estão vazias. A partir daí, encaminhamos $v_2 = 2$ para a partição oposta a de $v_1$. Aplicamos o mesmo raciocínio para $v_3$ e $v_4$.
 
@@ -76,7 +76,7 @@ Analogamente, definimos $b_i$ para a partição $B$.
 \end{defi}
 
 \begin{prop} \label{particao:odd}
-$S_n = \sum_{i = 1}^n$ é impar $\Rightarrow$ Não há solução.
+$S_n = \sum_{i = 1}^n v_i$ é impar $\Rightarrow$ Não há solução.
 \end{prop}
 
 \begin{prop} \label{particao:proof}
@@ -189,9 +189,9 @@ $S_n$ é par $\Leftrightarrow$ Há solução.
 Se $a_i > v_i$ e $b_i > v_i$, então $v_i$ pode ser encaminhado para qualquer partição.
 \end{cor}
 
-Note que, tanto na construção do algoritmo \ref{particao:code} quanto na demonstração da proposição \ref{particao:proof}, não fizemos uso da ideia de encaminhar para a partição com menor soma parcial (ou maior folga parcial), como discutida no início da seção \hyperref[particao:abordagem]{Abordagens}. Tal ideia, porém, dá um critério para decidir qual partição o elemento deve ir, já que a maior folga parcial é sempre positiva.
+Note que, tanto na construção do algoritmo \ref{particao:code} quanto na demonstração da proposição \ref{particao:proof}, não fizemos uso da ideia de encaminhar para a partição com menor soma parcial (ou maior folga parcial), como discutida no início da seção. Tal ideia, porém, dá um critério para decidir qual partição o elemento deve ir, já que a maior folga parcial é sempre positiva.
 
-No algoritmo desenvolvido, há a prioridade sempre de encaminhar o elemento para partição $A$ e, caso não houver \quotes{folga} suficiente, envia para partição $B$. Esta escolha foi, todavia, arbitrária, já que um outro algoritmo não intuitivo que respeita a proposição seria encaminhar o elemento aleatoriamente entre as partições com \quotes{folga} de tamanho pelo menos $v_i$ para todo $i$.
+No algoritmo desenvolvido existe a prioridade de sempre encaminhar o elemento para partição $A$ e, caso não houver \quotes{folga} suficiente, envia para partição $B$. Esta escolha foi, todavia, arbitrária, já que um outro algoritmo não intuitivo que respeita a proposição seria encaminhar o elemento aleatoriamente entre as partições com \quotes{folga} de tamanho pelo menos $v_i$, para todo $i$.
 
 \section{Exercícios}
 

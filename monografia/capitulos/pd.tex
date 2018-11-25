@@ -5,7 +5,7 @@ Quanto pensamos no escopo de problemas de otimização, pensamos em Programaçã
 
 Quando resolvemos problemas como o Problema da Mochila ou o Problema do Troco, fazemos a hipótese de que a ordem em que os itens ou moedas são selecionados não importa, já que estamos interessados apenas no subconjunto final de itens.
 
-A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzi-lo ao problema original utilizando uma técnica gulosa.
+A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzí-lo ao problema original utilizando uma técnica gulosa.
 
 \section{Problema da Mochila modificado}
 
@@ -86,7 +86,7 @@ Intuitivamente, essa ordem representa inserir o elemento que é mais pesado ante
 
 \subsubsection*{Decrescente em $c - w$}
 
-Intuitivamente, essa ordem representa inserir o mais cedo possível itens que têm a maior diferença de peso antes e depois de serem colocados, aproveitando quando a mochila tem espaço para satisfazer a condição anterior a inserção e ocupando comparativamente pouco espaço após colocá-los.
+Intuitivamente, essa ordem representa inserir o mais cedo possível itens que têm a maior diferença de peso antes e depois de serem colocados, \quotes{aproveitando} quando a mochila tem espaço para satisfazer a condição anterior a inserção, ocupando comparativamente menos espaço após colocá-los.
 
 Essa é, de fato, a ordem correta. Utilizaremos para demonstração um argumento semelhante ao apresentado no capítulo \ref{salto}.
 
