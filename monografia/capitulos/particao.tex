@@ -1,7 +1,7 @@
-\chapter{Problema da Partição}
+\chapter{Explorando restrições}
 \label{particao}
 
-\subsection*{Enunciado}
+\section{Problema da Partição}
 
 É dado um vetor de $n$ números inteiros, $V = \{v_1, v_2, ..., v_n\}$, tal que, para todo $i \in [1, n]$, vale que $1 \leq v_i \leq i$.
 
@@ -20,7 +20,7 @@ $$\sum_{i = 1}^n v_i*r_i = 0$$
     \item A entrada $n = 3, V = \{1, 2, 4\}$ não é uma entrada válida já que não vale a restrição $1 \leq v_3 \leq 3$.
 \end{enumerate}
 
-\subsection*{Observações iniciais}
+\section{Desenvolvimento}
 
 Antes de resolver o problema, vale tentar estabelecer conexão com problemas famosos ou de estrutura semelhante.
 
@@ -33,7 +33,8 @@ Para obter algoritmos eficientes para o problema devemos, de alguma forma, explo
 Neste caso, a restrição de entrada $1 \leq v_i \leq n$ é a única diferença entre o Problema da Partição e o problema apresentado. 
 Problemas NP-completo são, à primeira vista, bastante atraentes para soluções gulosas. Evidentemente, um algoritmo baseado em uma estratégia gulosa não produz uma solução ótima para todas as instâncias do problema, pois, como tais algoritmos têm complexidade polinomial, levaria a uma prova de que P = NP.
 
-\subsection*{Abordagens}\label{particao:abordagem}
+% \subsection*{Abordagens}
+\label{particao:abordagem}
 
 Um algoritmo guloso natural é, iterativamente, contruir as partições, começando com duas partições vazias, encaminhamos um elemento à partição com menor soma parcial, tentando deixar as partições mais \quotes{equilibradas} possível a todo momento, isto é, minizando a diferença entre as partições em toda iteração.
 
@@ -61,7 +62,7 @@ Mesmo que exemplos não garantam a corretude do algoritmo para todos os casos, r
 
 Já que nosso algoritmo apresenta uma série de sucessos em exemplos que montamos, é a hora de tentar formalizá-lo.
 
-\subsection*{Formalização e demonstração}
+\subsection*{Demonstração}
 
 Sejam $A$ e $B$ as duas partições tal que dizemos que $v_i$ pertence a partição $A$ se $r_i = 1$ e pertence a $B$ se $r_i = -1$. Seguem algumas definições:
 
@@ -131,6 +132,8 @@ Assim, se $a_i + b_i \geq 2*v_i - 1$ e $a_i + b_i \leq 2*v_i - 2$, há uma contr
 
 \end{proof}
 
+\section{Implementação}
+
 Com a proposição \ref{particao:proof} provada agora podemos encontrar um algoritmo para resolver o problema. Como mostramos que há \quotes{folga} de tamanho pelo menos $v_i$ em alguma das partições em toda iteração, basta que, a cada iteração, encaminhemos o elemento atual para uma das partições com \quotes{folga} suficiente. A seguir, descrevemos essa ideia em pseudocódigo:
 
 \begin{algorithm}[h]
@@ -165,7 +168,9 @@ Com a proposição \ref{particao:proof} provada agora podemos encontrar um algor
 \end{algorithmic}
 \end{algorithm}
 
-\subsection*{Observações finais}
+É fácil ver que o pseudocódigo acima executa em tempo linear em $n$, utilizando memória constante.
+
+\section{Considerações finais}
 
 Vários corolários interessantes saem desta demonstração.
 
@@ -187,7 +192,3 @@ Se $a_i > v_i$ e $b_i > v_i$, então $v_i$ pode ser encaminhado para qualquer pa
 Note que, tanto na construção do algoritmo \ref{particao:code} quanto na demonstração da proposição \ref{particao:proof}, não fizemos uso da ideia de encaminhar para a partição com menor soma parcial (ou maior folga parcial), como discutida no início da seção \hyperref[particao:abordagem]{Abordagens}. Tal ideia, porém, dá um critério para decidir qual partição o elemento deve ir, já que a maior folga parcial é sempre positiva.
 
 No algoritmo desenvolvido, há a prioridade sempre de encaminhar o elemento para partição $A$ e, caso não houver \quotes{folga} suficiente, envia para partição $B$. Esta escolha foi, todavia, arbitrária, já que um outro algoritmo não intuitivo que respeita a proposição seria encaminhar o elemento aleatoriamente entre as partições com \quotes{folga} de tamanho pelo menos $v_i$ para todo $i$.
-
-\subsection*{Análise}
-
-Para encontrar a partição basta iterar em todos os elementos de maneira reversa, mantendo um contador representando a \quotes{folga} de um dos conjuntos, do mesmo jeito que foi feito na demonstração. Pode ser implementado em tempo linear utilizando memória constante.

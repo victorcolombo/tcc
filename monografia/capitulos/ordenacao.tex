@@ -3,7 +3,7 @@
 
 No capítulo anterior apresentamos um problema que utilizava um critério guloso para escolha direta da resposta. Nesse capítulo abordaremos um problema que envolve não um, mas dois critérios gulosos em etapas distintos do algoritmo para sua resolução, sendo que um deles é uma ordenação gulosa para a tomada de decisão do algoritmo.
 
-\subsection*{Enunciado}
+\section{Escalonamento minimizando a multa total}
 
 São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para serem completadas. A tarefa $i$ tem um prazo $p_i \in \{1, 2, ..., n\}$ e um multa $m_i \geq 0$ associada a ela. Desejamos escalonar cada tarefa a exatamente uma unidade de tempo em $\{1, 2, ..., n\}$ tal que a multa total seja mínima. Definimos se uma tarefa $i$ é escalonada para um tempo anterior ou igual ao seu prazo $p_i$, não pagamos a nada, caso contrário pagamos a multa $m_i$. A multa total é definida como a soma das multas das tarefas que não foram escalonadas antes de seus prazos.
 
@@ -13,7 +13,7 @@ São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para ser
     \item TODO
 \end{enumerate}
 
-\subsection*{Abordagens}
+\section{Desenvolvimento}
 
 Vamos supor que um conjunto de tarefas já foi escalonado e que desejamos escalonar uma tarefa $i$ buscando não pagar sua multa, se possível.
 
@@ -85,7 +85,7 @@ Da mesma forma que o caso anterior, temos que $c(\widetilde{e}) \leq c(e^*)$ e $
 
 Como em todos os quatro casos chegamos numa contradição, o algoritmo produz a resposta ótima.
 
-\subsection*{Implementação e análise}
+\section{Implementação}
 
 Para implementação deste problema, podemos montar um vetor $escalonamento$ tal que $escalonamento[j] = i$ indica que a tarefa $i$ foi atribuída ao tempo $j$. Se o tempo $j$ não foi escalonado para nenhuma tarefa numa dada iteração, assumimos que $escalonamento[j] = 0$.
 
@@ -145,7 +145,7 @@ O gargalo do algoritmo é a escolha do tempo, já que a ordenação das tarefas 
 \end{algorithmic}
 \end{algorithm}
 
-\subsection*{Observações finais}
+\section{Considerações finais}
 
 Percebemos que este problema é mais sofisticado comparado ao que foi apresentado no capítulo anterior. Diferentemente dos saltos, que apresentavam uma estrutura de escolhas independentes, agora precisamos lidar com o fato de que a escolha de um escalonamento para um conjunto de tarefas influencia a escolha para próxima tarefa.
 

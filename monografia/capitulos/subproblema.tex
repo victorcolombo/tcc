@@ -1,9 +1,9 @@
-\chapter{Aplicação em Subproblemas}
+\chapter{Subproblemas gulosos}
 \label{subproblema}
 
 Nos capítulos anteriores, foram abordados problemas cuja única resolução era a aplicação de um critério guloso, seja de escolha ou ordenação. Neste capítulo, o problema apresentado não terá solução gulosa mas, através de aplicação de outras técnicas, podemos reduzir o problema a um subproblema que aceita solução gulosa.
 
-\subsection*{Enunciado}
+\section{Operações em vetor}
 
 É dado um vetor de inteiros $h = \{h_1, h_2, ..., h_n\}$ e dois inteiros $X \geq 0$ e $0 \leq D \leq n - 1$. Você pode fazer até $X$ operações em $h$. Cada operação é definida como incrementar em $1$ todos $h_j$, tal que $j \in [i, min(i + D, n)]$, isto é, $h_i \rec h_i + 1$, $h_{i + 1} \rec h_{i + 1} + 1$, ..., $h_{min(i + D, n)} \rec h_{min(i + D, n)} + 1$.
 
@@ -15,7 +15,7 @@ Queremos encontrar o maior $H$ tal que o $h_i \geq H$ para qualquer $i \in [1, n
     \item TODO
 \end{enumerate}
 
-\subsection*{Abordagens}
+\section{Desenvolvimento}
 
 Imediatamente conseguimos perceber que este problema tem muitas \quotes{partes soltas}, dificultando a aplicação direta de um algoritmo guloso. Precisamos maximizar $H$, que depende do $h$ final, que por sua vez depende das operações escolhidas.
 
@@ -76,7 +76,7 @@ Definiremos $H$ como \textbf{viável} se existe um conjunto de até $X$ operaç�
 
 Como o algoritmo \ref{subproblema:algo} utiliza o menor número de operações, se este número for menor ou igual a $X$, significa que o $H$ fixado é fazível.
 
-\subsection*{Implementação e análise}
+\section{Implementação}
 
 \begin{algorithm}[H]
 \caption{Solução para o Problema \ref{subproblema}}
@@ -145,5 +145,3 @@ Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a uti
 \end{algorithm}
 
 É fácil ver que \textsc{ValidoLinear} é $O(n)$. Substituindo \textsc{Valido} por \textsc{ValidoLinear} em \ref{subproblema:code} chegamos na complexidade de tempo $O(n \lg X)$ e memória $O(n)$.
-
-\subsection*{Observações finais}

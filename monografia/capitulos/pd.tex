@@ -1,15 +1,13 @@
 \chapter{Aplicação em Programação Dinâmica}
 \label{pd}
 
-\subsection*{Introdução}
-
 Quanto pensamos no escopo de problemas de otimização, pensamos em Programação Dinâmica como uma abordagem completamente disjunta da abordagem gulosa. Neste capítulo mostraremos que, na verdade, é possível aliar ambas as técnicas.
 
 Quando resolvemos problemas como o Problema da Mochila ou o Problema do Troco, fazemos a hipótese de que a ordem em que os itens ou moedas são selecionados não importa, já que estamos interessados apenas no subconjunto final de itens.
 
 A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzi-lo ao problema original utilizando uma técnica gulosa.
 
-\subsection*{Enunciado}
+\section{Problema da Mochila modificado}
 
 Um mochileiro pretende acampar e precisa decidir quais itens colocará em sua mochila e em que ordem, buscando maximizar a soma dos valores destes. Ele escolhe adicionar um item baseado no peso estimado deste e quanto espaço restante há na mochila. Após adicionado, o mochileiro percebe que o item tem peso diferente do estimado, mas não pode mais removê-lo.
 
@@ -44,7 +42,7 @@ Dizemos que um subconjunto válido $I$ é ótimo se $V(I)$ é máximo. Desejamos
     \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = \{3, 1, 3, 1\}$, $w = \{1, 2, 2, 4\}$, tem uma solução ótima, $I = \{1, 2, 3\}$, $r = \{3, 1, 2\}$, $V(I) = 1 + 2 + 3 = 6$. Desta vez, porém, a ordem importa, já que $r = \{1, 2, 3\}$ e $r = \{3, 2, 1\}$ infringem a condição dos pesos, sendo permutações inválidas de $I$. \label{pd:ex2}
 \end{enumerate}
 
-\subsection*{Observações iniciais}
+\section{Desenvolvimento}
 
 Primeiramente é necessário observar que se $c = w$, o problema é uma instância do Problema da Mochila clássico. Este, por sua vez, pode ser resolvido com um algoritmo de Programação Dinâmica \cite{stefanot} baseado na recorrência:
 
@@ -79,8 +77,6 @@ A recorrência \ref{pd:recnaiv} assume que, como a ordem de inserção no proble
 Para lidar com isso, poderíamos aplicar a recorrência \label{pd:recnaiv} para toda escolha de permutação de $d, w, v$. Isto nos daria uma solucão de complexidade $O(nSn!)$ em tempo, mas é possível fazer melhor que isso.
 
 Podemos desconfiar que existe um critério independente do subconjunto escolhido para encontrar a ordem em que os itens devem ser inseridos e que essa ordem segue algum critério guloso.
-
-\subsection*{Abordagem}
 
 Vamos supor que já sabemos o subconjunto ótimo de itens e precisamos apenas decidir sua ordem. Algumas ordens candidatas são:
 
@@ -142,7 +138,7 @@ Percebemos que a condição \ref{pd:eq1} equivale a condição \ref{pd:eq3} e qu
 
 Exercício 1: Suponha que não haja a restrição $c_i \geq w_i$. Prove que o teorema \ref{pd:proof} continua válido.
 
-\subsection*{Análise e implementação}
+\section{Implementação}
 
 A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória $O(1)$.
 
