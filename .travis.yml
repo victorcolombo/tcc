@@ -8,6 +8,7 @@ before_install:
 script:
 - make --directory=monografia && mv monografia/main.pdf pagina/monografia.pdf
 - make --directory=poster && mv poster/main.pdf pagina/poster.pdf
+- make --directory=apresentacao && mv apresentacao/main.pdf pagina/apresentacao.pdf
 deploy:
   provider: pages
   skip-cleanup: true
