@@ -84,6 +84,11 @@
 
 \usepackage{fourier}
 
+% Locale
+\usepackage[portuguese]{babel}
+\uselanguage{Portuguese}
+\languagepath{Portuguese}
+
 %----------------------------------------------------------------------------------------
 %   TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -97,7 +102,7 @@ Instituto de Matemática e Estatística da Universidade de São Paulo \\ % Your 
 \medskip
 \textit{victor.colombo@usp.br} % Your email address
 }
-\date{\today} % Date, can be changed to a custom date
+\date{26 de Novembro de 2018} % Date, can be changed to a custom date
 
 \begin{document}
 
@@ -123,16 +128,17 @@ Instituto de Matemática e Estatística da Universidade de São Paulo \\ % Your 
 \begin{frame}
 \frametitle{Objetivos}
 \begin{itemize}
-\item Apresentar algoritmos gulosos de uma maneira pragmática, a partir de problemas
-de competições de programação.
-
-\item Destoar dos problemas clássicos que são frequentemente abordados nos livros-texto.
 
 \item Resolver problemas que utilizem algoritmos gulosos aliados a outros tópicos.
 
 \item Desenvolver o raciocínio e a intuição por trás das técnicas gulosas
 
 \item Criar uma ferramenta sistemática para resolver problemas dessa classe.
+
+\item Apresentar algoritmos gulosos de uma maneira pragmática, a partir de problemas
+de competições de programação.
+
+\item Destoar dos problemas clássicos que são frequentemente abordados nos livros-texto.
 \end{itemize}
 \end{frame}
 
@@ -185,7 +191,7 @@ de competições de programação.
 
 \item Cada item tem um peso $w_i$ \textbf{após} de ser colocado na mochila, um peso $c_i$ \textbf{antes} de ser colocado na mochila e um valor $v_i$.
 
-\item Para todo item, $c_i \leq w_i$.
+\item Para todo item, $c_i \geq w_i$.
 
 \item Escolher subconjunto  de itens $I \subseteq [1, n]$ e uma permutação $r$ de $I$ tal que, para todo $j$, $$c_{r_j} + \sum_{i = 1}^{j - 1} w_{r_i} \leq S$$
 
@@ -268,9 +274,9 @@ de competições de programação.
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Demonstração}
-\frametitle{Theorem}
-\begin{theorem}[Ordenação gulosa]
+\frametitle{Formalização}
+\frametitle{Teorema}
+\begin{theorem}
 Se $I \subseteq [1, n]$ é um subconjunto ótimo de itens e $r$ é uma permutação de $I$ tal que $c_{r_i} - w_{r_i} \geq c_{r_j} - w_{r_j}$ para todo $i \leq j$, então $r$ é uma permutação válida.
 \end{theorem}
 Definiremos uma função $F(p)$ para uma permutação $p$ como o número de pares de índices $(i, j)$, $i \leq j$, tal que $c_{p_i} - w_{p_i} < c_{p_j} - w_{p_j}$.\\~\\
@@ -284,7 +290,7 @@ Suponha que $r$ não seja uma permutação válida.
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Ordenação gulosa - cont.}
+\frametitle{Demonstração}
 
 
 Seja $r^*$ uma permutação válida de $I$ com menor valor de $F(r^*) > 0$. Seja $t \in [1, |I| - 1]$ o primeiro índice tal que $c_{r^*_t} - w_{r^*_t} < c_{r^*_{t + 1}} - w_{r^*_{t + 1}}$.\\~\\
@@ -299,7 +305,7 @@ $$c_{r^*_{t + 1}} \leq S^* - w_{r^*_t}$$
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Ordenação gulosa - cont.}
+\frametitle{Demonstração - cont.}
 
 \begin{itemize}
 \item Ora mas como $t$ é uma ``inversão'', vale que:
@@ -310,7 +316,7 @@ $$c_{r^*_t} - w_{r^*_t} < c_{r^*_{t + 1}} - w_{r^*_{t + 1}}$$
 
 $$c_{r^*_{t}} + w_{r^*_{t + 1}} < c_{r^*_{t + 1}} + w_{r^*_t} \leq S^*$$
 
-\item A sequência $\widetilde{r} = \{r^*_1, ..., r^*_{t - 1}, r^*_{t + 1}, r^*_t, r^*_{t + 2}, ..., r^*_k\}$ é válida e remove pelo menos um par de índices que viola a ordenação gulosa. Assim, temos que $F(\widetilde{r}) < F(r^*)$, uma contradição na hipótese que $F(r^*)$ é mínimo.
+\item A sequência $\widetilde{r} = \{r_1, ..., r_{t - 1}, r_t, r^*_{t + 1}, r^*_{t + 2}, ..., r^*_k\}$ é válida e remove pelo menos um par de índices que viola a ordenação gulosa. Assim, temos que $F(\widetilde{r}) < F(r^*)$, uma contradição na hipótese que $F(r^*)$ é mínimo.
 \end{itemize}
 
 \end{frame}
@@ -335,13 +341,23 @@ $$c_{r^*_{t}} + w_{r^*_{t + 1}} < c_{r^*_{t + 1}} + w_{r^*_t} \leq S^*$$
 \begin{figure}
 \includegraphics[width=0.8\linewidth]{pseudo.png}
 \end{figure}
+\begin{itemize}
+  \item Complexidade de tempo $O(nS + n \lg n)$ e espaço $O(nS)$.
+  \item Possível reduzir o espaço para $O(S)$ numa implementação iterativa. 
+\end{itemize}
 
 \end{frame}
 
 %------------------------------------------------
 
 \begin{frame}
-\Huge{\centerline{Obrigado!}}
+
+\begin{itemize}
+\item Perguntas?\\~\\
+\item Mais informações em:
+\url{https://linux.ime.usp.br/~colombo/mac0499/}
+\end{itemize}
+
 \end{frame}
 
 %----------------------------------------------------------------------------------------
