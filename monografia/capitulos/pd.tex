@@ -1,23 +1,23 @@
 \chapter{Aplicação em Programação Dinâmica}
 \label{pd}
 
-Quanto pensamos no escopo de problemas de otimização, pensamos em Programação Dinâmica como uma abordagem completamente disjunta da abordagem gulosa. Neste capítulo mostraremos que, na verdade, é possível aliar ambas as técnicas.
+Quando pensamos no escopo de problemas de otimização, pensamos em Programação Dinâmica como uma abordagem completamente disjunta da abordagem gulosa. Neste capítulo mostraremos que, na verdade, é possível aliar ambas as técnicas.
 
 Quando resolvemos problemas como o Problema da Mochila ou o Problema do Troco, fazemos a hipótese de que a ordem em que os itens ou moedas são selecionados não importa, já que estamos interessados apenas no subconjunto final de itens.
 
-A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzí-lo ao problema original utilizando uma técnica gulosa.
+A seguir, apresentaremos uma variação do Problema da Mochila onde a ordem em que se colocam os itens na mochila importa e como reduzi-lo ao problema original utilizando uma técnica gulosa.
 
 \section{Problema da Mochila modificado}
 
 Um mochileiro pretende acampar e precisa decidir quais itens colocará em sua mochila e em que ordem, buscando maximizar a soma dos valores destes. Ele escolhe adicionar um item baseado no peso estimado deste e quanto espaço restante há na mochila. Após adicionado, o mochileiro percebe que o item tem peso diferente do estimado, mas não pode mais removê-lo.
 
-Alternativamente, existe uma mochila vazia de tamanho $S$ e $n$ itens que desejamos colocar nesta mochila.
+Ou seja, existe uma mochila vazia de tamanho $S$ e $n$ itens que desejamos colocar nesta mochila.
 
-Cada item tem dois pesos atrelados a ele: $w_i$, o peso do item após ser colocado na mochila, e $c_i$, o peso do item antes de ser colocado na mochila. Além disso, cada item tem um valor $v_i$ atrelado a ele.
+Cada item tem dois pesos atrelados a ele: $w_i$, o peso do item após ser colocado na mochila, e $c_i$, a estimativa de peso do item antes de ser colocado na mochila. Além disso, cada item tem um valor $v_i$ atrelado a ele.
 
 Um item pode ser colocado na mochila se o espaço restante na mochila é maior que $c_i$. Após colocado, ele ocupa o peso $w_i$.
 
-Deseja-se decidir quais itens serão adicionados na mochila e sua ordem, respeitando as restrições de peso e que somem o valor máximo.
+Deseja-se decidir quais itens serão adicionados na mochila e em que ordem, respeitando as restrições de peso de forma que somem o valor máximo.
 
 Formalmente, são dados um inteiro $S$ e três vetores contendo $n$ inteiros positivos cada: $w = \{w_1, w_2, ..., w_n\}$, $v = \{v_1, v_2, ..., v_n\}$, $c = \{c_1, c_2, ..., c_n\}$, onde $c_i \geq w_i$ para todo $i \in [1, n]$. Seja $r = \{r_1, r_2, ..., r_k\}$, $k \leq |I|$, uma permutação de um subconjunto $I \subseteq [1, n]$. 
 
@@ -39,7 +39,7 @@ Dizemos que um subconjunto válido $I$ é ótimo se $V(I)$ é máximo. Desejamos
 
 \begin{enumerate}[i)]
     \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = w = \{1, 2, 2, 4\}$, tem uma solução ótima $I = \{1, 2, 3\}$, $r = \{1, 2, 3\}$, $V(I) = 1 + 2 + 3 = 6$. Vale notar que $r = \{3, 1, 2\}$ e $r = \{3, 2, 1\}$ também são permutações válidas de $I$ de mesmo valor.
-    \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = \{3, 1, 3, 1\}$, $w = \{1, 2, 2, 4\}$, tem uma solução ótima, $I = \{1, 2, 3\}$, $r = \{3, 1, 2\}$, $V(I) = 1 + 2 + 3 = 6$. Desta vez, porém, a ordem importa, já que $r = \{1, 2, 3\}$ e $r = \{3, 2, 1\}$ infringem a condição dos pesos, sendo permutações inválidas de $I$. \label{pd:ex2}
+    \item A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = \{1, 2, 5, 5\}$, $w = \{1, 0, 4, 5\}$, tem uma solução ótima, $I = \{1, 2, 3\}$, $r = \{2, 3, 1\}$, $V(I) = 1 + 2 + 3 = 6$. Desta vez, porém, a ordem importa, já que $r = \{1, 2, 3\}$ e $r = \{3, 2, 1\}$ infringem a condição dos pesos, sendo permutações inválidas de $I$. \label{pd:ex2}
 \end{enumerate}
 
 \section{Desenvolvimento}
@@ -55,7 +55,7 @@ Primeiramente é necessário observar que se $c = w$, o problema é uma instânc
   \end{cases}
 \end{equation}
 
-Onde $f(i, s, v, w, n)$ é o maior valor de uma mochila com $s$ de espaço e itens disponíveis de valores $v_i, v_{i + 1}, ..., v_n$, pesos $w_i, w_{i + 1}, ..., w_n$.
+Onde $f(i, s, v, w, n)$ é o maior valor de uma mochila com $s$ de capacidade e $n - i + 1$ itens disponíveis de valores $v_i, v_{i + 1}, ..., v_n$, pesos $w_i, w_{i + 1}, ..., w_n$.
 
 Uma ideia inicial para adaptar o algoritmo clássico seria modificar a condição de $w_i \leq s$ para $c_i \leq s$, como mostrado abaixo:
 
@@ -68,7 +68,7 @@ Uma ideia inicial para adaptar o algoritmo clássico seria modificar a condiçã
   \end{cases}
 \end{equation}
 
-Onde $g(i, s, v, w, c, n)$ é o maior valor de uma mochila com $s$ de espaço e itens disponíveis de valores $v_i, v_{i + 1}, ..., v_n$, pesos após colocados na mochila $w_i, w_{i + 1}, ..., w_n$ e pesos antes de colocados na mochila $c_i, c_{i + 1}, ..., c_n$.
+Onde $g(i, s, v, w, c, n)$ é o maior valor de uma mochila com $s$ de capacidade e $n - i + 1$ itens disponíveis de valores $v_i, v_{i + 1}, ..., v_n$, pesos após colocados na mochila $w_i, w_{i + 1}, ..., w_n$ e pesos antes de colocados na mochila $c_i, c_{i + 1}, ..., c_n$.
 
 A priori, esta modificação parece suficiente para compreender as restrições impostas pelo enunciado. Esta modificação por si só, porém, não é suficiente. 
 
@@ -82,7 +82,9 @@ Vamos supor que já sabemos o subconjunto ótimo de itens e precisamos apenas de
 
 \subsubsection*{Decrescente em $c$}
 
-Intuitivamente, essa ordem representa inserir o elemento que é mais pesado antes de ser colocado na mochila o quanto antes. Essa ordem é, porém, rapidamente descartada através do exemplo \ref{pd:ex2} que montamos anteriormente, onde $r = \{3, 2, 1\}$ é decrescente em $c$ mas não é válida.
+Intuitivamente, essa ordem representa inserir o elemento que é mais pesado antes de ser colocado na mochila o quanto antes. Essa ordem é, porém, rapidamente descartada através do exemplo \ref{pd:ex2}:
+
+A entrada $S = 5$, $n = 4$, $v = \{1, 2, 3, 4\}$, $c = \{1, 2, 5, 5\}$, $w = \{1, 0, 4, 5\}$, tem uma solução ótima na qual $I = \{1, 2, 3\}$ e $r = \{2, 3, 1\}$. A permutação $r = \{3, 2, 1\}$, embora seja decrescente em $c$, não é válida.
 
 \subsubsection*{Decrescente em $c - w$}
 
@@ -124,7 +126,7 @@ $$c_{r^*_{t}} + w_{r^*_{t + 1}} < c_{r^*_{t + 1}} + w_{r^*_t} \leq S^*$$
   c_{r^*_{t}} < S^* - w_{r^*_{t + 1}}
 \end{equation}
 
-Percebemos que a condição \ref{pd:eq1} equivale a condição \ref{pd:eq3} e que \ref{pd:eq2} equivale a condição \ref{pd:eq4} numa permutação onde $r^*_t$ e $r^*{t + 1}$ estão trocados. Ou seja, a sequência $\widetilde{r} = \{r^*_1, ..., r^*_{t - 1}, r^*_{t + 1}, r^*_t, r^*_{t + 2}, ..., r^*_k\}$ é válida e remove pelo menos um par de índices que viola a ordenação gulosa. Assim, temos que $F(\widetilde{r}) < F(r^*)$, uma contradição na hipótese que $F(r^*)$ é mínimo.
+Percebemos que a condição \ref{pd:eq1} equivale à condição \ref{pd:eq3} e que \ref{pd:eq2} equivale à condição \ref{pd:eq4} numa permutação onde $r^*_t$ e $r^*{t + 1}$ estão trocados. Ou seja, a sequência $\widetilde{r} = \{r^*_1, ..., r^*_{t - 1}, r^*_{t + 1}, r^*_t, r^*_{t + 2}, ..., r^*_k\}$ é válida e remove pelo menos um par de índices que viola a ordenação gulosa. Assim, temos que $F(\widetilde{r}) < F(r^*)$, uma contradição na hipótese que $F(r^*)$ é mínimo.
 \end{proof}
 
 \begin{lema} \label{pd:impl}
@@ -138,7 +140,7 @@ Percebemos que a condição \ref{pd:eq1} equivale a condição \ref{pd:eq3} e qu
 
 \section{Implementação e análise}
 
-A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória $O(1)$.
+A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória adicional $O(1)$.
 
 A recorrência \ref{pd:recok} pode ser resolvida com a modificação da Programação Dinâmica para o Problema da Mochila, que apresenta complexidade de tempo $O(nS)$ e de espaço, $O(S)$.
 

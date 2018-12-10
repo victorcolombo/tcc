@@ -30,17 +30,17 @@ Isto já nos traz um grande arsenal de informações, pois sabemos que o problem
 
 Para obter algoritmos eficientes para o problema devemos, de alguma forma, explorar as restrições adicionais que foram incluídas.
 
-Neste caso, a restrição de entrada $1 \leq v_i \leq n$ é a única diferença entre o Problema da Partição e o problema apresentado. 
-Problemas NP-completo são, à primeira vista, bastante atraentes para soluções gulosas. Evidentemente, um algoritmo baseado em uma estratégia gulosa não produz uma solução ótima para todas as instâncias do problema, pois, como tais algoritmos têm complexidade polinomial, levaria a uma prova de que P = NP.
+Neste caso, a restrição de entrada $1 \leq v_i \leq i$ é a única diferença entre o Problema da Partição e o problema apresentado. 
+Problemas NP-completo são, à primeira vista, bastante atraentes para soluções gulosas. Evidentemente, um algoritmo baseado em uma estratégia gulosa não produz uma solução ótima para todas as instâncias do problema, pois, como tais algoritmos usualmente têm complexidade polinomial, levaria a uma prova de que P = NP.
 
 % \subsection*{Abordagens}
 \label{particao:abordagem}
 
 Um algoritmo guloso natural é, iterativamente, contruir as partições, começando com duas partições vazias, encaminhamos um elemento à partição com menor soma parcial, tentando deixar as partições mais \quotes{equilibradas} possível a todo momento, isto é, minizando a diferença entre as partições em toda iteração.
 
-Além disso, como estamos trabalhando com restrição na entrada em função do índice, temos a intuição de que a ordem em que esses elementos são adicionados importa. Daí seguem duas opções imediatas: iterando crescentemente de $1$ a $n$ ou iterando descrescentemente de $n$ a $1$.
+Além disso, como estamos trabalhando com restrição na entrada em função do índice, temos a intuição de que a ordem em que esses elementos são adicionados importa. Daí seguem duas opções imediatas: iterar crescentemente de $1$ a $n$ ou iterar descrescentemente de $n$ a $1$.
 
-\subsubsection*{Iterando crescentemente}
+\subsubsection*{Iterar crescentemente}
 
 Podemos rapidamente descartar esta ordem retornando ao exemplo \ref{particao:ex2} que já analisamos. Na entrada $V = \{1, 2, 3, 4\}$.
 
@@ -50,7 +50,7 @@ Chegando assim na resposta inválida $r = \{-1, 1, -1, 1\}$, que resulta em part
 
 Esta instância mostra que o algoritmo não funciona para todos os casos.
 
-\subsubsection*{Iterando decrescentemente}
+\subsubsection*{Iterar decrescentemente}
 
 Vamos testar com a mesma entrada $V = \{1, 2, 3, 4\}$, temos:
 
@@ -86,11 +86,10 @@ Se $S_n$ for par, para qualquer iteração $n - i + 1$ do algoritmo, existe folg
 
 Considere a iteração que decide para que partição $v_i$ será encaminhado, com as partições $A$ e $B$ com folgas $a_i$ e $b_i$, respectivamente.
 
-Primeiramente devemos notar que
+Já que todo elemento deverá ser encaminhado para alguma partição, vale que:
 \begin{equation} \label{eq:1}
     a_i + b_i = S_i
 \end{equation}
-, já que todo elemento deverá ser encaminhado para alguma partição.
 
 Pela definição, sabemos que $i \geq v_i \geq 1$. A partir disso, temos que:
 
@@ -104,9 +103,9 @@ Assim, podemos escrever $S_i$ como:
 
 Vamos assumir que nem $A$, nem $B$, tenham \quotes{folga} suficiente para acomodar $v_i$. Provaremos por contradição, separado em 2 casos:
 
-\subsubsection*{Caso 1: $a_i$ e $b_i$ tem a mesma paridade.}
+\subsubsection*{Caso 1: $a_i$ e $b_i$ têm a mesma paridade.}
 
-Se $a_i$ e $b_i$ tem a mesma paridade, $S_i$ é par.
+Se $a_i$ e $b_i$ têm a mesma paridade, $S_i$ é par.
 
 Como nenhuma partição tem \quotes{folga} para acomodar $v_i$, vale que $a_i < v_i$ e $b_i < v_i$. Somando as equações, vale que $a_i + b_i < 2*v_i$ ou também $a_i + b_i \leq 2*v_i - 1$.
 
@@ -118,11 +117,11 @@ $$S_i = a_i + b_i = 2*v_i - 1$$
 
 Contradição, já que $2*v_i - 1$ é ímpar e $S_i$ é par.
 
-\subsubsection*{Caso 2: $a_i$ e $b_i$ tem diferentes paridades.}
+\subsubsection*{Caso 2: $a_i$ e $b_i$ têm diferentes paridades.}
 
 Como nenhuma partição tem \quotes{folga} para acomodar $v_i$, temos que $a_i < v_i$ e $b_i < v_i$.
 
-Ora mas como $a_i$ e $b_i$ tem paridades diferentes, deve valer que $a_i < v_i$ e $b_i < v_i - 1$ ou $a_i < v_i - 1$ e $b_i < v_i$.
+Ora mas como $a_i$ e $b_i$ têm paridades diferentes, deve valer que $a_i < v_i$ e $b_i < v_i - 1$ ou $a_i < v_i - 1$ e $b_i < v_i$.
 
 Vamos assumir, sem perda de generalidade, que $a_i < v_i$ e $b_i < v_i - 1$. Somando ambas as desigualdades, segue que $a_i + b_i < 2*v_i - 1$ ou $a_i + b_i \leq 2*v_i - 2$.
 
@@ -168,7 +167,7 @@ Com a proposição \ref{particao:proof} provada agora podemos encontrar um algor
 \end{algorithmic}
 \end{algorithm}
 
-É fácil ver que o pseudocódigo acima executa em tempo linear em $n$, utilizando memória constante.
+É fácil ver que o pseudocódigo acima executa em tempo linear em $n$, utilizando memória adicional constante.
 
 \section{Considerações finais}
 

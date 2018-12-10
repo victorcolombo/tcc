@@ -13,7 +13,7 @@ A seguir aplicaremos tal técnica para demonstrar a corretude da solução para 
 
 Existem pedras $n$ pedras numa reta numérica, em posições distintas $v_1, v_2, ..., v_{n - 1}, v_n$. Dizemos que o sapo pode saltar de uma pedra $v_i$ para outra pedra $v_j$ desde que a distância entre elas seja menor ou igual a $\Delta$. Um sapo está inicialmente na pedra $v_1$. Qual é o menor número de saltos que ele precisa dar para chegar na pedra $v_n$? 
 
-Alternativamente, é dado um vetor de $n$ números \underline{ordenados distintos} $v = \{v_1, v_2, ..., v_n\}$ e um número $\Delta$.
+Ou seja, é dado um vetor de $n$ números \underline{distintos ordenados} $v = \{v_1, v_2, ..., v_n\}$ e um número $\Delta$.
 
 Uma sequência $u = \{u_1, u_2, ..., u_k\}$ é \textbf{solução} se:
 \begin{itemize}
@@ -23,7 +23,7 @@ Uma sequência $u = \{u_1, u_2, ..., u_k\}$ é \textbf{solução} se:
     \item $|u_i - u_{i + 1}| \leq \Delta$ para $i \in [1, k - 1]$
 \end{itemize}
 
-Vamos supor que sempre existe pelo menos um $u$.
+Vamos supor que sempre existe pelo menos uma solução.
 
 Desejamos encontrar uma sequência $u$ que satisfaça as propriedades acima e que o tamanho $k$ de $u$ seja mínimo.
 
@@ -67,7 +67,7 @@ Suponha que $k \geq 3$ e que $u$ é ótima mas não é crescente. Seja $i$ o pri
 0 \leq u_i - u_{i + 1} \leq \Delta
 \end{equation}
 
-Além disso, temos que $\{u_1, u_2, ..., u_i\}$ é crescente. Ou seja, vale que $u_{i - 1} < u_i$. Da definição, segue que:
+Além disso, temos que $\{u_1, u_2, ..., u_i\}$ é crescente. Ou seja, vale que $u_{i - 1} < u_i$. Como $u$ é solução, segue que:
 \begin{equation} \label{eq:diffl}
 0 \leq u_i - u_{i - 1} \leq \Delta
 \end{equation}
@@ -143,7 +143,7 @@ A ideia descrita na seção anterior é simples de se implementar, basta manter 
 \subsection*{Teóricos}
 
 \begin{enumerate}
-  \item Modifique o algoritmo para que ele trate quando a instância não possui resposta. Prove que sua modificação não produz uma solução se e somente se não há uma solução.
+  \item Modifique o algoritmo para que ele trate quando a instância não possui resposta. Prove que sua modificação está correta, ou seja, produz uma solução se e somente se há uma solução.
   \item Suponha que $v$ possui inteiros repetidos e não necessariamente em ordem. É possível generalizar a solução? Demonstre.
 \end{enumerate}
 

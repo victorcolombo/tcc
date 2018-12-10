@@ -7,13 +7,13 @@ Abordagens gulosas nem sempre produzem a solução ótima, mas quando produzem, 
 
 Eles são muito difíceis de se definir precisamente. Há pesquisa para formalizar a classe de problemas considerados gulosos, como os trabalhos de Edmonds~\cite{Edmonds1971} e Lawler~\cite{lawler2001combinatorial} na teoria dos matroides, e o trabalho de Borodin, Nielsen e Rackoff~\cite{Borodin2003} na definição de \quotes{guloso}.
 
-Em seu livro didático, Cormen~\cite{CLRS} define algoritmos gulosos como algoritmos que apresentam \emph{propriedade de escolha gulosa}: conseguimos chegar na solução ótima globalmente através de escolhas ótimas localmente (escolhas gulosas). Isto é, em contraste com a programação dinâmica, que cada escolha depende dos subproblemas, num algoritmo guloso fazemos a escolha que parece melhor para o problema atual, sem considerar os subproblemas.
+Em seu livro didático, Cormen~\cite{CLRS} define algoritmos gulosos como algoritmos que apresentam \emph{propriedade de escolha gulosa}: conseguimos chegar na solução ótima global através de escolhas localmente ótimas (escolhas gulosas). Isto é, em contraste com a programação dinâmica, que cada escolha depende dos subproblemas, num algoritmo guloso fazemos a escolha que parece melhor para a situação atual, sem considerar os subproblemas, e, mais importante, uma vez que uma decisão é tomada, não a mudamos mais.
 
 \section{Objetivos}
 
 Neste trabalho apresentamos algoritmos gulosos de uma maneira pragmática, a partir de problemas de competições de programação, como a Maratona de Programação\footnote{\url{http://maratona.ime.usp.br/}}, destoando dos problemas clássicos que são frequentemente abordados nos livros-texto.
 
-Além de apresentar os conceitos paralelamente as soluções para os problemas, focamos também em desenvolver o raciocínio e a intuição por trás das técnicas gulosas, a fim de criar uma ferramenta sistemática para resolvê-los.
+Além de apresentar os conceitos paralelamente às soluções para os problemas, focamos também em desenvolver o raciocínio e a intuição por trás das técnicas gulosas, a fim de criar uma ferramenta sistemática para resolvê-los.
 
 \section{Estrutura do texto}
 
@@ -23,4 +23,4 @@ Nos capítulos \ref{ordenacao} e \ref{subproblema} investigamos como podemos red
 
 No capítulo \ref{pd} mostramos como algoritmos gulosos e programação dinâmica, duas técnicas distintas para resolução de problemas de otimização, podem ser utilizadas em conjunto.
 
-No capítulo \ref{particao} exploramos como restrições na entrada de um prolema podem mudar completamente a natureza de sua solução, podendo admitir soluções gulosas que não seriam possíveis sem as restrições.
+No capítulo \ref{particao} exploramos como restrições na entrada de um problema podem mudar completamente a natureza de sua solução, podendo admitir soluções gulosas que não seriam possíveis sem as restrições.

@@ -5,9 +5,9 @@ No capítulo anterior apresentamos um problema que utilizava um critério guloso
 
 \section{Escalonamento minimizando a multa total}
 
-São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para serem completadas. A tarefa $i$ tem um prazo $p_i \in \{1, 2, ..., n\}$ e um multa $m_i \geq 0$ associada a ela. Desejamos escalonar cada tarefa a exatamente uma unidade de tempo em $\{1, 2, ..., n\}$ tal que a multa total seja mínima.
+São dadas tarefas $1, 2, ..., n$ que demoram uma unidade de tempo cada para serem completadas. A tarefa $i$ tem um prazo $p_i \in \{1, 2, ..., n\}$ e um multa $m_i \geq 0$ caso seja realizada após o prazo. Desejamos escalonar cada tarefa a exatamente uma unidade de tempo em $\{1, 2, ..., n\}$ tal que a multa total seja mínima.
 
-Definimos que, se uma tarefa $i$ é escalonada para um tempo anterior ou igual ao seu prazo $p_i$, não pagamos a nada, caso contrário pagamos a multa $m_i$. A multa total é definida como a soma das multas das tarefas que não foram escalonadas antes de seus prazos.
+Definimos que, se uma tarefa $i$ é escalonada para um tempo anterior ou igual ao seu prazo $p_i$, não pagamos nada, caso contrário pagamos a multa $m_i$. A multa total é definida como a soma das multas das tarefas que não foram escalonadas até seus prazos.
 
 \subsection*{Exemplos}
 
@@ -34,13 +34,13 @@ Destas observações segue o seguinte algoritmo:
 
 Partindo da tarefa $1$, verifique se é possível não pagar sua multa. Em caso afirmativo, escalone para o maior tempo $t_1 \leq p_1$. Caso contrário, escalone para o tempo mais tarde ainda livre. Repita para $2$, $3$, ..., até $n$.
 
-Encontramos assim um critério de escolha de tempos caso valesse a hipótese de que em toda tarefa deve-se evitar pagar a multa. A hipótese, porém, é falsa.
+Encontramos assim um critério de escolha de tempos que aplica uma ideia gulosa de evitar pagar multa quando possível. Entretanto, a estratégia proposta não leva a uma solução ótima.
 
 Um simples contra exemplo para tal algoritmo é o caso $p_1 = 1$, $m_1 = 1$, $p_2 = 1$, $m_2 = \infty$. A tarefa $1$ pode ser escalonada no tempo $t = 1 \leq p_1$ evitando pagar a multa $m_1 = 1$ mas fazendo com que a tarefa $2$ fosse escalonada fora do seu prazo, acarretando numa multa total muito maior. Neste exemplo, gostaríamos pagar a multa da tarefa $1$ pois isso possibilita evitar de pagar a multa da tarefa $2$, que é muito mais vantajosa globalmente.
 
-Percebemos que sem alguma observação adicional, a hipótese ser falta acarreta que o mínimo local, deixar de pagar a multa da tarefa atual, não acarreta mínimo global, menor soma das multas pagas. Como abordado na introdução, este é um princípio fundamental para aplicação de técnicas gulosas.
+Percebemos que sem alguma observação adicional, a escolha do mínimo local, deixando de pagar a multa da tarefa atual, não acarreta necessariamente o mínimo global, ou seja, não minimiza a soma total das multas pagas. Como abordado na introdução, este é um princípio fundamental para aplicação de técnicas gulosas.
 
-Utilizando o contra exemplo acima, desenvolvemos a intuição de que vale a pena \quotes{acomodar} primeiro tarefas com maior $m_i$ para evitarmos pagar suas multas.
+Utilizando o contra exemplo acima, desenvolvemos a intuição de que vale a pena \quotes{acomodar} primeiro tarefas com maiores multas.
 
 \subsubsection*{Evitando a maior multa e quanto mais tarde, melhor}
 
@@ -52,11 +52,11 @@ Esta abordagem está correta, como provaremos a seguir.
 
 Assumiremos sem perda de generalidade que $m_1 \geq m_2 \geq ... \geq m_n$.
 
-Um escalonamento $e$ é uma permutação de $\{1, 2, ..., n\}$ tal que $e_i = j$ significa que a tarefa $i$ foi escalonada para o tempo $j$. Por definição, $e_i \neq e_j$ para todo $i \neq j$ e $e_i \in \{1, 2, ..., n\}$. Definimos como $c(e)$ a multa total deste escalonamento.
+Um escalonamento $e$ é uma permutação de $\{1, 2, ..., n\}$ tal que $e_i = j$ significa que a tarefa $i$ foi escalonada para o tempo $j$. Por definição, $e_i \neq e_j$ para todo $i \neq j$ e $e_i \in \{1, 2, ..., n\}$. Definimos como $M(e)$ a multa total deste escalonamento.
 
-Como vimos no capítulo anterior, podemos demonstrar que nosso algoritmo é produz um escalonamento ótimo através de um argumento de troca.
+Como vimos no capítulo anterior, podemos demonstrar que nosso algoritmo produz um escalonamento ótimo através de um argumento de troca.
 
-Seja $e$ o escalonamento produzido pelo algoritmo descrito e $e^*$ o escalonamento ótimo com maior prefixo comum com $e$, ou seja, $e^*$ é tal que $c(e^*)$ é mínimo e $e_i = e^*_i$ para todo $i \in [1, k - 1]$ com $k$ máximo.
+Seja $e$ o escalonamento produzido pelo algoritmo descrito e $e^*$ o escalonamento ótimo com maior prefixo comum com $e$, ou seja, $e^*$ é tal que $M(e^*)$ é mínimo e $e_i = e^*_i$ para todo $i \in [1, k - 1]$ com $k$ máximo.
 
 Se $e = e^*$, está provado. Caso contrário, seja $k$ o primeiro índice tal que $e_k \neq e^*_k$.
 
@@ -70,7 +70,7 @@ Seja $x$ a tarefa tal que $e^*_x = e_k$. Montando um escalonamento $\widetilde{e
 
 Ora mas, por hipótese, vale que $m_x \leq m_k$. Da identidade:
 
-$$c(e^*) - m_k \leq c(\widetilde{e}) \leq c(e^*) - m_k + m_x \leq c(e^*)$$
+$$M(e^*) - m_k \leq M(\widetilde{e}) \leq M(e^*) - m_k + m_x \leq M(e^*)$$
 
 E do fato que $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, há uma contradição.
 
@@ -82,13 +82,13 @@ Se a tarefa $k$ paga multa em $e$ e $e_k < e^*_k$, ela paga multa em $e^*$, o qu
 
 Se a tarefa $k$ não paga multa em $e$ e $e_k > e^*_k$, ela não paga multa em $e^*$. Seja $x$ a tarefa tal que $e^*_x = e_k$. Montando um escalonamento $\widetilde{e}$ trocando os tempos das tarefas $x$ e $k$ em $e^*$, temos que a tarefa $k$ continua não cobrando multa, já que $\widetilde{e}_k = e_k$ e se a tarefa $x$ não cobrava multa em $e^*$, não cobra multa em $\widetilde{e}$, já que $\widetilde{e}_x = e^*_k \leq e^*_x$.
 
-Analogamente ao caso anterior, temos que $c(\widetilde{e}) \leq c(e^*)$ e $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, seguindo assim uma contradição.
+Analogamente ao caso anterior, temos que $M(\widetilde{e}) \leq M(e^*)$ e $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, seguindo assim uma contradição.
 
 \subsubsection*{Caso $e_k > e^*_k$ e tarefa $k$ paga multa em $e$}
 
 Seja $x$ a tarefa tal que $e^*_x = e_k$. Montando um escalonamento $\widetilde{e}$ trocando os tempos das tarefas $x$ e $k$ em $e^*$, temos que a tarefa $k$ cobra multa, já que $\widetilde{e}_k = e_k$ e se a tarefa $x$ não cobrava multa em $e^*$, não cobra multa em $\widetilde{e}$, já que $\widetilde{e}_x = e^*_k \leq e^*_x$.
 
-Da mesma forma que o caso anterior, temos que $c(\widetilde{e}) \leq c(e^*)$ e $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, seguindo assim uma contradição.
+Da mesma forma que o caso anterior, temos que $M(\widetilde{e}) \leq M(e^*)$ e $\widetilde{e}$ tem prefixo comum com $e$ de tamanho maior que $e^*$, seguindo assim uma contradição.
 
 Como em todos os quatro casos chegamos numa contradição, o algoritmo produz a resposta ótima.
 
@@ -162,9 +162,19 @@ Além disso, foi necessário introduzir o uso de estruturas de dados mais sofist
 
 \section{Exercícios}
 
+\subsection*{Teóricos}
+
 \begin{enumerate}
+  \item Algoritmos de Kruskal: TODO
+\end{enumerate}
+
+\subsection*{Problemas}
+
+\begin{enumerate}
+  \setcounter{enumi}{1}
   \item \href{https://br.spoj.com/problems/JDENTIST/}{Dentista} - Olimpíada Brasileira de Informática 2010 (Fase 2, Nível Junior)
   \item \href{https://codeforces.com/problemset/problem/991/B}{Getting an A} - Codeforces Round \#491 (Div. 2)
+  \item \href{https://br.spoj.com/problems/RMAPA11/}{Reduzindo detalhes em um mapa} - Olimpíada Brasileira de Informática 2011 (Fase 2, Nível 2)
   \item \href{https://br.spoj.com/problems/CORMENMG/}{O Código de Cormen} - Maratona Mineira 2013
   \item \href{https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&category=410&page=show_problem&problem=2864}{Balloons} - Southeast USA Regional Intercollegiate Programing Contest 2010
 \end{enumerate}
