@@ -1,28 +1,32 @@
 \chapter{Subproblemas gulosos}
 \label{subproblema}
 
-Nos capítulos anteriores, foram abordados problemas cuja única resolução era a aplicação de um critério guloso, seja de escolha ou ordenação. Neste capítulo, o problema apresentado não terá solução gulosa mas, através de aplicação de outras técnicas, podemos reduzir o problema a um subproblema que aceita solução gulosa.
+Nos capítulos anteriores, foram abordados problemas cuja resolução era a aplicação direta de um critério guloso, seja de escolha ou ordenação. Neste capítulo, o problema apresentado não terá solução gulosa mas, através de aplicação de outras técnicas, podemos reduzir o problema a um subproblema que aceita solução gulosa.
 
 \section{Operações em vetor}
 
-É dado um vetor de inteiros $h = \{h_1, h_2, ..., h_n\}$ e dois inteiros $X \geq 0$ e $0 \leq D \leq n - 1$. Você pode fazer até $X$ operações em $h$. Cada operação é definida como incrementar em $1$ todos $h_j$, tal que $j \in [i, min(i + D, n)]$, isto é, $h_i \rec h_i + 1$, $h_{i + 1} \rec h_{i + 1} + 1$, ..., $h_{min(i + D, n)} \rec h_{min(i + D, n)} + 1$.
+Um floricultor tem $n$ flores dispostas sequencialmente numa linha reta, sendo que cada flor tem uma altura inicial. Ele tem $X$ dias até a entrega de sua próxima encomenda. A cada dia é escolhido um intervalo de flores consecutivas para serem regadas. Como sua mangueira tem potência limitada, então ela só tem um alcance de $D + 1$ flores. Isso é, se posicionarmos a mangueira na flor $3$, regamos todas as flores no intervalo $[3, D + 3]$.  As flores, quando regadas por um dia, aumentam de tamanho em uma unidade.
 
-Queremos encontrar o maior $H$ tal que o $h_i \geq H$ para qualquer $i \in [1, n]$, após a aplicação de $X$ operações em quaisquer intervalos de tamanho até $D$.
+Seu objetivo é utilizar \textbf{todas} as flores para montar o buque mais bonito possível. A beleza de um buquê é definida como o tamanho da menor flor, ou seja, quando maior for a menor flor, mais bonito será o buque.
+
+Ou seja, dado um vetor de inteiros $h = \{h_1, h_2, ..., h_n\}$ e dois inteiros $X \geq 0$ e $0 \leq D \leq n - 1$. Você pode fazer $X$ operações em $h$. Cada operação é definida como incrementar em $1$ todos os elementos de um intervalo $[i, min(i + D, n)]$, isto é, $h_i \rec h_i + 1$, $h_{i + 1} \rec h_{i + 1} + 1$, ..., $h_{min(i + D, n)} \rec h_{min(i + D, n)} + 1$.
+
+Queremos encontrar o maior $H$ tal que existe uma escolha de $X$ operações sobre $h$ onde vale que $h_i \geq H$ para qualquer $i \in [1, n]$.
 
 \subsection*{Exemplos}
 
 \begin{enumerate}[i)]
-    \item Para $h = \{1, 2, 1\}$, $X = 2$ e $D = 2$, podemos aplicar uma operação no par $h_1, h_2$ e outra operação no par $h_2, h_3$, resultando no vetor $\{2, 4, 2\}$. Assim, podemos tomar $H = 2$ pois é maior ou igual a todos os elementos de $\{2, 4, 2\}$. Neste caso, $H = 2$ é máximo.
-    \item Para $h = \{1, 2, 1\}$, $X = 5$ e $D = 1$, podemos aplicar duas operações em $h_1$ e três operações em $h_3$, resultando no vetor $\{3, 2, 4\}$. Assim, podemos tomar $H = 2$ pois é maior ou igual a todos os elementos de $\{3, 2, 4\}$. Neste caso, porém, poderíamos ter aplicado duas operações em $h_1$, duas operações em $h_3$ e uma operação em $h_2$, resultando no vetor $\{3, 3, 3\}$. Assim, poderíamos $H = 3$ que é o valor máximo neste caso.
+    \item Para $h = \{1, 2, 1\}$, $X = 2$ e $D = 2$, podemos aplicar uma operação no par $h_1, h_2$ e outra operação no par $h_2, h_3$, resultando no vetor $\{2, 4, 2\}$. Assim, podemos tomar $H = 2$ pois é maior ou igual a todos os elementos de $\{2, 4, 2\}$. Neste caso, $H = 2$ é máximo, pois com $2$ operações de incremento em intervalos de tamanho $2$ não é possível obter valor maior.
+    \item Para $h = \{1, 2, 1\}$, $X = 5$ e $D = 1$, podemos aplicar duas operações em $h_1$ e três operações em $h_3$, resultando no vetor $\{3, 2, 4\}$. Assim, podemos tomar $H = 2$ pois é maior ou igual a todos os elementos de $\{3, 2, 4\}$. Por outro lado, poderíamos ter aplicado duas operações em $h_1$, duas operações em $h_3$ e uma operação em $h_2$, resultando no vetor $\{3, 3, 3\}$. Assim, teríamos $H = 3$ que é o valor máximo neste caso.
 \end{enumerate}
 
 \section{Desenvolvimento}
 
-Imediatamente conseguimos perceber que este problema tem muitas \quotes{partes soltas}, dificultando a aplicação direta de um algoritmo guloso. Precisamos maximizar $H$, que depende do $h$ final, que por sua vez depende das operações escolhidas.
+Imediatamente conseguimos perceber que este problema tem muitas \quotes{partes soltas}, dificultando a aplicação direta de um algoritmo guloso. Precisamos encontrar o $H$ máximo, que depende do $h$ final, que por sua vez depende das operações escolhidas.
 
-Uma abordagem útil quando estamos estagnados é modificar o problema para outro que parece mais simples e, depois de resolvê-lo, tentar generalizar ou modificar a solução para resolver o problema original. Em particular, vamos fixar a variável resposta $H$.
+Uma abordagem útil quando estamos estagnados é modificar o problema para outro que parece mais simples e, depois de resolvê-lo, tentar generalizar ou modificar a solução para resolver o problema original. Neste caso, vamos fixar a variável resposta $H$.
 
-Suponha que $H$ é fixo. Gostaríamos de saber se é possível transformar $h$ num vetor tal que $H$ é menor ou igual a todos seus elementos após realizar até $X$ operações. Note que transformamos um problema de otimização em um problema binário.
+Suponha que $H$ é fixo, ou seja, gostaríamos de saber se é possível transformar $h$ num vetor tal que $H$ é o seu mínimo após realizar até $X$ operações. Note que transformamos um problema de otimização em um problema de decisão.
 
 \subsubsection*{Algoritmo guloso para $H$ fixo}\label{subproblema:algo}
 
@@ -34,11 +38,18 @@ Depois de \quotes{arrumar} $h_1$, repetimos o mesmo processo para $h_2$, $h_3$ e
 
 \subsubsection*{Maximizando $H$}
 
-Agora que já sabemos como resolver o problema binário para $H$ fixo, como achamos o maior $H$ possível?
+Agora que já sabemos como resolver o problema de decisão para $H$ fixo, como achamos o maior $H$ possível? Uma ideia ingênua seria iterar sobre todos os valores possíveis de $H$.
 
-Uma ideia ingênua seria iterar sobre todos os valores possíveis de $H$. É fácil encontrar o universo de valores que $H$ pode assumir: no mínimo, nenhuma operação é realizada e $H$ é o valor do menor elemento do vetor $h$. No máximo, todas as $X$operações são aplicadas em intervalos contendo o menor elemento de $h$. Assim, basta testarmos os valores de $H$ no intervalo $[min(h), min(h) + X]$ ($min(h)$ sendo o elemento mínimo do vetor $h$). Tal abordagem nos daria uma solução não polinomial, pois a complexidade de tempo seria proporcional a $X$.
+É fácil encontrar o intervalo de valores que $H$ pode assumir. Primeiramente vale lembrar que, por definição, de $H$ é o valor mínimo de $h$ após a aplicação das operações. Assim, o menor valor possível de $H$ é quando nenhuma das $X$ operações modifica o valor mínimo de $h$. Analogamente, o maior valor possível de $H$ é quando todas as $X$ operações modificam o valor mínimo de $h$, que será incrementado em $X$ unidades. Definimos assim o intervalo de valores que $H$ pode assumir:
 
-A observação essencial é que se um valor $H$ é viável, todo $H' < H$ também é. Assim, podemos reduzir o espaço de busca pela metade a cada iteração, similar à uma Busca Binária. Esta abordagem nos dá uma solução polinomial proporcional a $O(\lg X)$.
+
+$$\min_{i \in [1, n]}\{h_i\} \leq H \leq \min_{i \in [1, n]}\{h_i\} + X$$
+
+Percebemos assim que uma iteração ingênua resulta numa abordagem não polinomial, pois a complexidade de tempo seria proporcional a $X$.
+
+A observação essencial é que se um valor $H$ é viável, todo $H' < H$ também é. Assim, podemos reduzir o espaço de busca pela metade a cada iteração, já que se estamos procurando o valor máximo de $H$ num intervalo $[l, r]$ e sabemos que $\frac{l + r}{2}$ não é viável, basta procurar no intervalo ${[l, \frac{l + r}{2} - 1]}$. Analogamente, se $\frac{l + r}{2}$ é viável, podemos encontrar um melhor candidato, então continuamos a procurar no intervalo $[\frac{l + r}{2}, r]$.
+
+Esta abordagem nos dá um algoritmos que explora apenas uma quantidade polinomial de candidatos, proporcional a $\lg X$.
 
 \subsection*{Demonstrações}
 
@@ -59,19 +70,19 @@ Definiremos $H$ como \textbf{viável} se existe um conjunto de até $X$ operaç�
 \end{prop}
 
 \begin{proof}
-    Definimos uma sequência de operações $s$ como uma sequência de índices ordenados que representam operações num intervalo com tal índice como extremidade esquerda. Por exemplo: $s = \{1, 3\}$ é a aplicação das operações que incrementa valores de $h$ de índices $[1, min(1 + D, n)]$ e $[3, min(3 + D, n)]$.
+    Definimos uma sequência de operações $s$ como uma sequência de índices ordenados que representam operações num intervalo com tal índice como extremidade esquerda. Por exemplo: $s = (1, 3)$ é a aplicação das operações que incrementam valores de $h$ de índices $[1, min(1 + D, n)]$ e $[3, min(3 + D, n)]$.
     
-    Seja $s$ a sequência de operações aplicadas que criam vetor $h^*$ que respeita a restrição de $H$. e seja $s'$ a sequência de operações mínima com maior prefixo comum com $s$ que cria um vetor $h'$ que respeita a restrição de $H$.
+    Seja $s$ a sequência de operações aplicadas que criam vetor $h^*$ que respeita a restrição de $H$ e seja $s'$ uma sequência de operações tal que $|s'|$ é mínimo, com maior prefixo comum com $s$ que cria um vetor $h'$ que respeita a restrição de $H$.
     
     Se $s = s'$, está provado.
 
     Caso contrário, seja $k$ o menor índice tal que $s_k \neq s'_k$.
 
-    Pela invariante do algoritmo vale que, se $s_i \neq s_{i - 1}$, todos os $h^*_j = H$ para todo $j < s_i$, ou seja, todos os índices antes de $s_i$ já satisfazem a condição. Também vale que, para todo índice $s_i$, $h^*_{s_i}$ é justo, isto é, $h^*_{s_i} = H$.
+    Pela invariante do algoritmo vale que, se $s_i \neq s_{i - 1}$, todos os $h^*_j \geq H$ para todo $j < s_i$, ou seja, todos os índices antes de $s_i$ já satisfazem a condição. Também vale que, para todo índice $s_i$, $h^*_{s_i}$ é justo, isto é, $h^*_{s_i} = H$.
 
     Se $s_k < s'_k$, $s'$ possui uma ocorrência a menos de $s_k$ que $s$ e $h^*_j = H$, então $h'_j < H$, uma contradição na hipótese que $h'$ cria um vetor que respeita a restrição de $H$.
 
-    Se $s_k > s'_k$, $s'$ possui uma ocorrência a mais de $s'_k$ que $s$. Ora mas como $h^*_{s'_k} = H$, então $h'$ apresenta folga, ou seja, $h'_{s'_k} > H$. Assim, podemos substituir $s'_k$ por $s_k$ em $s'$, fazendo com que $h'_{s'_k} = H$ e mantendo o mesmo ou aumentando os $h'_j$ com $j > s'_k$. Esta é uma contradição na hipótese que $s'$ tem máximo prefixo comum com $s$.
+    Se $s_k > s'_k$, $s'$ possui uma ocorrência a mais de $s'_k$ que $s$. Ora, mas como $h^*_{s'_k} = H$, então $h'$ apresenta folga, ou seja, $h'_{s'_k} > H$. Assim, podemos substituir $s'_k$ por $s_k$ em $s'$, fazendo com que $h'_{s'_k} = H$ e mantendo o mesmo ou aumentando os $h'_j$ com $j > s'_k$. Esta é uma contradição na hipótese que $s'$ tem máximo prefixo comum com $s$.
 
 \end{proof}
 
@@ -100,7 +111,7 @@ Como o algoritmo \ref{subproblema:algo} utiliza o menor número de operações, 
 \Function{\textsc{Resolve}}{h, n, X, D}
     \State $esq \rec min(h)$
     \State $dir \rec min(h) + X$
-    \While{$esq < dir$}
+    \While{$\:esq < dir$}
         \State $meio \rec \frac{esq + dir}{2}$
         \If{$\textsc{Valido}(h, n, X, D, meio)$}
             \State $esq \rec meio$
@@ -113,13 +124,13 @@ Como o algoritmo \ref{subproblema:algo} utiliza o menor número de operações, 
 \end{algorithmic}
 \end{algorithm}
 
-No pior caso, a função \textsc{Valido} aplica exatamente uma operação num intervalo com extremidade em cada elemento. Cada operação gasta $O(D)$ para atualizar os elementos de $h$ afetados. Assim, a complexidade de \textsc{Valido} é $O(nD)$.
+No pior caso, a função \textsc{Valido} aplica exatamente uma operação em um intervalo com início em cada elemento. Cada operação gasta $O(D)$ para atualizar os elementos de $h$ afetados. Assim, a complexidade de \textsc{Valido} é $O(nD)$.
 
 A função \textsc{Resolve}, por sua vez, chama \textsc{Valido} e reduz o espaço de busca de $H$ na metade a cada iteração. Assim, a complexidade de \textsc{Resolve} é $O(nD \lg X)$.
 
 Embora a solução seja polinomial pois $D$ é limitado por $n$, ainda há como melhorar a solução. Podemos desconfiar que \textsc{Valido} tenha espaço para otimizações. 
 
-Precisamos de uma estrutura de dados que suporta incrementar intervalo e acessar posições do vetor de forma eficiente. Uma opção é utilizar uma Árvore de Segmentos com Propagação Preguiçosa \cite{mehta2004handbook}, reduzindo a complexidade de cada operação de $O(D)$ para $O(\lg n)$, resultando na complexidade $O(n \lg n \lg X)$.
+Precisamos de uma estrutura de dados que dê suporte a incrementar intervalos e acessar posições do vetor de forma eficiente. Uma opção é utilizar uma Árvore de Segmentos com Propagação Preguiçosa \cite{matheusmso}, reduzindo a complexidade de cada operação de $O(D)$ para $O(\lg n)$, resultando na complexidade $O(n \lg n \lg X)$.
 
 Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a utilização de nenhuma estrutura de dados sofisticada. A observação essencial é estamos iterando nos vetor de maneira sequencial e todas as operações estão sendo feitas em ordem crescente da extremidade esquerda. Deste fato podemos utilizar uma ideia semelhante a Propagação Preguiçosa: manteremos um vetor que indica quantas operações terminam em cada índice. Com isso, basta manter acumulado, a cada iteração, quantas operações passaram por um elemento, modificando tal variável de acordo com as operações iniciadas e terminadas no índice atual.
 
