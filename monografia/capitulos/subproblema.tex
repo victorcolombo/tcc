@@ -7,7 +7,7 @@ Nos capítulos anteriores, foram abordados problemas cuja resolução era a apli
 
 Um floricultor tem $n$ flores dispostas sequencialmente numa linha reta, sendo que cada flor tem uma altura inicial. Ele tem $X$ dias até a entrega de sua próxima encomenda. A cada dia é escolhido um intervalo de flores consecutivas para serem regadas. Como sua mangueira tem potência limitada, então ela só tem um alcance de $D + 1$ flores. Isso é, se posicionarmos a mangueira na flor $3$, regamos todas as flores no intervalo $[3, D + 3]$.  As flores, quando regadas por um dia, aumentam de tamanho em uma unidade.
 
-Seu objetivo é utilizar \textbf{todas} as flores para montar o buque mais bonito possível. A beleza de um buquê é definida como o tamanho da menor flor, ou seja, quando maior for a menor flor, mais bonito será o buque.
+Seu objetivo é utilizar \textbf{todas} as flores para montar o buquê mais bonito possível. A beleza de um buquê é definida como o tamanho da menor flor, ou seja, quando maior for a menor flor, mais bonito será o buquê.
 
 Ou seja, dado um vetor de inteiros $h = \{h_1, h_2, ..., h_n\}$ e dois inteiros $X \geq 0$ e $0 \leq D \leq n - 1$. Você pode fazer $X$ operações em $h$. Cada operação é definida como incrementar em $1$ todos os elementos de um intervalo $[i, min(i + D, n)]$, isto é, $h_i \rec h_i + 1$, $h_{i + 1} \rec h_{i + 1} + 1$, ..., $h_{min(i + D, n)} \rec h_{min(i + D, n)} + 1$.
 
@@ -138,7 +138,11 @@ Embora o algoritmo \ref{subproblema:code} seja polinomial pois $D$ é limitado p
 
 Precisamos de uma estrutura de dados que dê suporte a incrementar intervalos e acessar posições do vetor de forma eficiente. Uma opção é utilizar uma Árvore de Segmentos com Propagação Preguiçosa \cite{matheusmso}, reduzindo a complexidade de cada operação de $O(D)$ para $O(\lg n)$, resultando na complexidade $O(n \lg n \lg X)$.
 
-Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a utilização de nenhuma estrutura de dados sofisticada. A observação essencial é estamos iterando nos vetor de maneira sequencial e todas as operações estão sendo feitas em ordem crescente da extremidade esquerda. Deste fato podemos utilizar uma ideia semelhante a Propagação Preguiçosa: manteremos um vetor que indica quantas operações terminam em cada índice. Com isso, basta manter acumulado, a cada iteração, quantas operações passaram por um elemento, modificando tal variável de acordo com as operações iniciadas e terminadas no índice atual.
+Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a utilização de nenhuma estrutura de dados sofisticada.
+
+A observação essencial é estamos iterando em $h$ de maneira sequencial e todas as operações estão sendo feitas em ordem crescente da extremidade esquerda. Deste fato podemos utilizar uma ideia semelhante à Propagação Preguiçosa: manteremos um vetor $preguica$ tal que $preguica[i]$ contém quantas operações terminam no índice $i - 1$. Com isso, basta manter acumulado numa variável $acum$ quantas operações passam pelo índice atual, descontando as operações cujos intervalos não o contém, armazenado em $preguica$. A cada elemento, calculamos quanto falta para que ele seja $H$, descontando o valor de $acum$. Se for necessário aplicar operações, tanto $acum$ quanto $preguica$ serão atualizados.
+
+A ideia mostrada pode ser vista no seguinte pseudócodigo:
 
 \begin{algorithm}[H]
 \caption{Função \textsc{Valido} em tempo linear}
@@ -148,10 +152,12 @@ Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a uti
     \State $preguica \rec \{0\}^{n + 1}$
     \State $acum \rec 0$
     \For{$i$ de $1$ até $n$}
-        \State $dif \rec max(H - h[i] + acum, 0)$
+        \State $acum \rec acum - preguica[i]$
+        \State $dif \rec max(H - h[i] - acum, 0)$
         \State $X \rec X - dif$
-        \State $acum \rec dif + preguica[i]$
-        \State $preguica[min(i + D, n + 1)] \rec preguica[min(i + D, n + 1)] + 1$
+        \State $acum \rec acum + dif$
+        \State $h[i] \rec h[i] + acum$
+        \State $preguica[min(i + D + 1, n + 1)] \rec preguica[min(i + D + 1, n + 1)] + dif$
     \EndFor
     \If{$X \geq 0$}
         \State \Return True
@@ -161,6 +167,87 @@ Podemos atingir uma complexidade ainda melhor que a abordagem anterior sem a uti
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+% Um exemplo de execução desse algoritmo, com entradas $h = \{1, 1, 2\}$, $n = 3$, $X = 3$, $D = 1$ e $H = 3$:
+
+% \begin{enumerate}[itemsep=0.5em]
+%     \item Inicialização:\\
+%     $
+%         h = \begin{blockarray}{ccc}
+%         1 & 2 & 3 \\
+%         \begin{block}{(ccc)}
+%           1 & 1 & 2  \\
+%         \end{block}
+%         \end{blockarray}
+%     $\qquad\qquad
+%     $acum = 0$\qquad\qquad
+%     $X = 3$\qquad\qquad
+%     $
+%         preguica = \begin{blockarray}{cccc}
+%         1 & 2 & 3 & 4 \\
+%         \begin{block}{(cccc)}
+%           0 & 0 & 0 & 0 \\
+%         \end{block}
+%         \end{blockarray}
+%     $
+%     \item Após a iteração 1:\\
+%     $
+%         h = \begin{blockarray}{ccc}
+%         1 & 2 & 3 \\
+%         \begin{block}{(ccc)}
+%           3 & 1 & 2  \\
+%         \end{block}
+%         \end{blockarray}
+%     $\qquad\qquad
+%     $acum = 2$\qquad\qquad
+%     $X = 1$\qquad\qquad
+%     $
+%         preguica = \begin{blockarray}{cccc}
+%         1 & 2 & 3 & 4 \\
+%         \begin{block}{(cccc)}
+%           0 & 0 & 2 & 0 \\
+%         \end{block}
+%         \end{blockarray}
+%      $
+%      \item Após a iteração 2:\\
+%      $
+%         h = \begin{blockarray}{ccc}
+%         1 & 2 & 3 \\
+%         \begin{block}{(ccc)}
+%           3 & 3 & 2  \\
+%         \end{block}
+%         \end{blockarray}
+%     $\qquad\qquad
+%     $acum = 2$\qquad\qquad
+%     $X = 1$\qquad\qquad
+%     $
+%         preguica = \begin{blockarray}{cccc}
+%         1 & 2 & 3 & 4 \\
+%         \begin{block}{(cccc)}
+%           0 & 0 & 2 & 0 \\
+%         \end{block}
+%         \end{blockarray}
+%      $\newpage
+%      \item Após a iteração 3:\\
+%     $
+%         h = \begin{blockarray}{ccc}
+%         1 & 2 & 3 \\
+%         \begin{block}{(ccc)}
+%           3 & 3 & 3  \\
+%         \end{block}
+%         \end{blockarray}
+%     $\qquad\qquad
+%     $acum = 1$\qquad\qquad
+%     $X = 0$\qquad\qquad
+%     $
+%         preguica = \begin{blockarray}{cccc}
+%         1 & 2 & 3 & 4 \\
+%         \begin{block}{(cccc)}
+%           0 & 0 & 2 & 1 \\
+%         \end{block}
+%         \end{blockarray}
+%      $
+% \end{enumerate}
 
 É fácil ver que \textsc{ValidoLinear} é $O(n)$. Substituindo \textsc{Valido} por \textsc{ValidoLinear} em \ref{subproblema:code} chegamos na complexidade de tempo $O(n \lg X)$ e memória $O(n)$.
 
