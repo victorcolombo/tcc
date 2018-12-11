@@ -92,7 +92,39 @@ Intuitivamente, essa ordem representa inserir o mais cedo possível itens que t�
 
 Essa é, de fato, a ordem correta. Utilizaremos para demonstração um argumento semelhante ao apresentado no capítulo \ref{salto}.
 
-\subsection*{Demonstrações}
+\subsection{Algoritmo}
+
+A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória adicional $O(1)$.
+
+A recorrência \ref{pd:recok} pode ser resolvida com a modificação da Programação Dinâmica para o Problema da Mochila, que apresenta complexidade de tempo $O(nS)$ e de espaço, $O(S)$.
+
+O algoritmo apresenta complexidade tempo $O(n \lg n + nS)$ e memória $O(S)$ se implementado iterativamente e $O(nS)$ se implementado recursivamente.
+
+\begin{algorithm}[H]
+\caption{Solução para o Problema \ref{pd}}
+\label{pd:code}
+\begin{algorithmic}[1]
+\Function{\textsc{Mochila}}{i, s, v, w, c, n, memo}
+  \If {$i = n + 1$}
+    \State \Return $0$
+  \EndIf
+  \If{$memo[i][s] = -1$}
+    \State $memo[i][s] \rec Mochila(i + 1, s, v, w, c, n)$
+    \If{$s \geq c[i]$}
+      \State $memo[i][s] \rec max(memo[i][s], v[i] + Mochila(i + 1, s - w[i], v, w, c, n))$
+    \EndIf
+  \EndIf
+  \State \Return $memo[i][s]$
+\EndFunction
+\Function{\textsc{Resolve}}{v, w, c, S, n}
+    \State $Ordene(v, w, c)$ (decrescente em $c - w$) 
+    \State $memo \rec \{\{-1\}^S\}^n$
+    \State \Return $\textsc{Mochila}(1, S, v, w, c, n, memo)$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Demonstrações}
 
 Definiremos uma função $F(r)$ como o número de pares de índices $(i, j)$, $i \leq j$, tal que $c_{r_i} - w_{r_i} < c_{r_j} - w_{r_j}$.
 
@@ -137,38 +169,6 @@ Percebemos que a condição \ref{pd:eq1} equivale à condição \ref{pd:eq3} e q
   Utilizando a proposição \ref{pd:proof}, para qualquer subconjunto ótimo de $d, w, v$ conforme sua ordenação, existe pelo menos uma permutação válida crescente.
   Provando assim que a recorrência \ref{pd:recok} encontra um subconjunto ótimo.
 \end{proof}
-
-\section{Implementação e análise}
-
-A ordenação gulosa pode ser feita com a modificação de um algoritmo de ordenação com complexidade de tempo $O(n \lg n)$ e memória adicional $O(1)$.
-
-A recorrência \ref{pd:recok} pode ser resolvida com a modificação da Programação Dinâmica para o Problema da Mochila, que apresenta complexidade de tempo $O(nS)$ e de espaço, $O(S)$.
-
-O algoritmo apresenta complexidade tempo $O(n \lg n + nS)$ e memória $O(S)$ se implementado iterativamente e $O(nS)$ se implementado recursivamente.
-
-\begin{algorithm}[H]
-\caption{Solução para o Problema \ref{pd}}
-\label{pd:code}
-\begin{algorithmic}[1]
-\Function{\textsc{Mochila}}{i, s, v, w, c, n, memo}
-  \If {$i = n + 1$}
-    \State \Return $0$
-  \EndIf
-  \If{$memo[i][s] = -1$}
-    \State $memo[i][s] \rec Mochila(i + 1, s, v, w, c, n)$
-    \If{$s \geq c[i]$}
-      \State $memo[i][s] \rec max(memo[i][s], v[i] + Mochila(i + 1, s - w[i], v, w, c, n))$
-    \EndIf
-  \EndIf
-  \State \Return $memo[i][s]$
-\EndFunction
-\Function{\textsc{Resolve}}{v, w, c, S, n}
-    \State $Ordene(v, w, c)$ (decrescente em $c - w$) 
-    \State $memo \rec \{\{-1\}^S\}^n$
-    \State \Return $\textsc{Mochila}(1, S, v, w, c, n, memo)$
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
 
 \section{Exercícios}
 

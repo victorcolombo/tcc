@@ -58,11 +58,49 @@ Encaminhamos o elemento $v_4 = 4$ para uma partição arbitrária, já que as du
 
 Chegando assim na resposta válida $r = \{-1, 1, 1, -1\}$, que resulta em partições de somas iguais, já que $(-1)*1 + (+1)*2 + (+1)*3 + (-1)*4 = 0$.
 
-Mesmo que exemplos não garantam a corretude do algoritmo para todos os casos, realizá-los pode aumentar nossa confiança antes de começarmos uma demonstração formal de corretude.
+Mesmo que exemplos não garantam a corretude da abordagem para todos os casos, realizá-los pode aumentar nossa confiança antes de começarmos uma demonstração formal de corretude.
 
-Já que nosso algoritmo apresenta uma série de sucessos em exemplos que montamos, é a hora de tentar formalizá-lo.
+Já que nossa abordagem apresenta uma série de sucessos em exemplos que montamos, é a hora de tentar desenvolver um algoritmo e desmontrá-lo.
 
-\subsection*{Demonstrações}
+\subsection{Algoritmo}
+
+Para implementar a ideia acima, manteremos uma variável $folgaA$ que possui o espaço restante na partição $A$. A cada iteração, se houver espaço em $A$ para acomodar $v_i$, encaminha para tal partição, atualizando $folgaA$. Caso contrário, encaminha para partição $B$:
+
+\begin{algorithm}[h]
+\caption{Solução gulosa para o Problema \ref{particao}}
+\label{particao:code}
+\begin{algorithmic}[1]
+\Function{\textsc{SomaVetor}}{v, n}
+    \State $soma \rec 0$
+    \For{$i$ de $1$ até $n$}
+        \State $soma \rec soma + v_i$
+    \EndFor
+    \State \Return soma
+\EndFunction
+
+\Function{\textsc{Resolve}}{v, n}
+    \State $soma \rec \text{SomaVetor}(v, n)$
+    \If{$soma \% 2 \neq 0$}
+        \State \Return \textbf{Impossível}
+    \EndIf
+    \State $folgaA \rec \frac{soma}{2}$
+    \State $r \rec \{0\}^n$
+    \For{$i$ de $n$ até $1$}
+        \If{$folgaA > v_i$}
+            \State $folgaA \rec folgaA - v_i$
+            \State $r_i \rec 1$
+        \Else
+            \State $r_i \rec -1$
+        \EndIf
+    \EndFor
+    \State \Return $r$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+É fácil ver que o pseudocódigo acima executa em tempo linear em $n$, utilizando memória adicional constante.
+
+\subsection{Demonstrações}
 
 Sejam $A$ e $B$ as duas partições tal que dizemos que $v_i$ pertence a partição $A$ se $r_i = 1$ e pertence a $B$ se $r_i = -1$. Seguem algumas definições:
 
@@ -130,44 +168,6 @@ Utilizando \ref{eq:1} e \ref{eq:2}, temos que $a_i + b_i \geq 2*v_i - 1$.
 Assim, se $a_i + b_i \geq 2*v_i - 1$ e $a_i + b_i \leq 2*v_i - 2$, há uma contradição, já que a intersecção é vazia.
 
 \end{proof}
-
-\section{Implementação e análise}
-
-Com a proposição \ref{particao:proof} provada agora podemos encontrar um algoritmo para resolver o problema. Como mostramos que há \quotes{folga} de tamanho pelo menos $v_i$ em alguma das partições em toda iteração, basta que, a cada iteração, encaminhemos o elemento atual para uma das partições com \quotes{folga} suficiente. A seguir, descrevemos essa ideia em pseudocódigo:
-
-\begin{algorithm}[h]
-\caption{Solução gulosa para o Problema \ref{particao}}
-\label{particao:code}
-\begin{algorithmic}[1]
-\Function{\textsc{SomaVetor}}{v, n}
-    \State $soma \rec 0$
-    \For{$i$ de $1$ até $n$}
-        \State $soma \rec soma + v_i$
-    \EndFor
-    \State \Return soma
-\EndFunction
-
-\Function{\textsc{Resolve}}{v, n}
-    \State $soma \rec \text{SomaVetor}(v, n)$
-    \If{$soma \% 2 \neq 0$}
-        \State \Return \textbf{Impossível}
-    \EndIf
-    \State $folgaA \rec \frac{soma}{2}$
-    \State $r \rec \{0\}^n$
-    \For{$i$ de $n$ até $1$}
-        \If{$folgaA > v_i$}
-            \State $folgaA \rec folgaA - v_i$
-            \State $r_i \rec 1$
-        \Else
-            \State $r_i \rec -1$
-        \EndIf
-    \EndFor
-    \State \Return $r$
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-É fácil ver que o pseudocódigo acima executa em tempo linear em $n$, utilizando memória adicional constante.
 
 \section{Considerações finais}
 

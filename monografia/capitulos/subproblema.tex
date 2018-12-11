@@ -28,13 +28,15 @@ Uma abordagem útil quando estamos estagnados é modificar o problema para outro
 
 Suponha que $H$ é fixo, ou seja, gostaríamos de saber se é possível transformar $h$ num vetor tal que $H$ é o seu mínimo após realizar até $X$ operações. Note que transformamos um problema de otimização em um problema de decisão.
 
-\subsubsection*{Algoritmo guloso para $H$ fixo}\label{subproblema:algo}
+\subsubsection*{Algoritmo guloso para $H$ fixo}
 
-A partir daqui conseguimos ter algumas ideias gulosas. Primeiramente precisamos modificar $h_1$ para que $h_1 \geq H$.
+Quando fixamos o valor de $H$, podemos desenvolver um algoritmo guloso.
 
-Se, inicialmente, $h_1 \geq H$, não gostaríamos de \quotes{gastar} nenhuma operação em algum intervalo que contém $h_1$. Se $h_1 < H$, precisamos pelo menos $H - h_1$ operações para que $h_1$ satisfaça a condição. Note que somente o intervalo $[1, min(1 + D, n)]$ contém o índice $1$, nos poupando da escolha do intervalo.
+Se $h_1 < H$, precisamos aplicar pelo menos $H - h_1$ operações para que $h_1$ satisfaça a restrição. Note que não há escolha na realização de tais operações, já que o único intervalo de tamanho $D$ que contém $1$ é $[1, min(1 + D)]$. Se $h_1 \geq H$, não há nada a ser feito.
 
-Depois de \quotes{arrumar} $h_1$, repetimos o mesmo processo para $h_2$, $h_3$ e assim por diante. Ao \quotes{arrumar} todos os elementos de $h$, se o número de operações aplicadas forem menores ou iguais $X$, $H$ é uma resposta viável.
+Aplicamos a mesma lógica para $h_2$. Note que agora temos duas opções de intervalos que contém $2$, se $D > 0$: $[1, min(1 + D, n)]$ e $[2, min(2 + D, n)]$. Podemos, porém, descartar o intervalo $[1, min(1 + D, n)]$ pois, por construção, $h_1$ já está correto. Assim, como $[2, min(2 + D, n)]$ pelo menos o número de elementos menores que $H$ que $[1, min(1 + D, n)]$, podemos sempre escolher o intervalo com início no elemento.
+
+É razoável pensar que este é o método que utiliza menos operações para transformar o vetor $h$ tal que seu mínimo é $H$. Assim se o número de operações aplicadas forem menores ou iguais $X$, $H$ é uma resposta viável.
 
 \subsubsection*{Maximizando $H$}
 
@@ -49,46 +51,11 @@ Percebemos assim que uma iteração ingênua resulta numa abordagem não polinom
 
 A observação essencial é que se um valor $H$ é viável, todo $H' < H$ também é. Assim, podemos reduzir o espaço de busca pela metade a cada iteração, já que se estamos procurando o valor máximo de $H$ num intervalo $[l, r]$ e sabemos que $\frac{l + r}{2}$ não é viável, basta procurar no intervalo ${[l, \frac{l + r}{2} - 1]}$. Analogamente, se $\frac{l + r}{2}$ é viável, podemos encontrar um melhor candidato, então continuamos a procurar no intervalo $[\frac{l + r}{2}, r]$.
 
-Esta abordagem nos dá um algoritmos que explora apenas uma quantidade polinomial de candidatos, proporcional a $\lg X$.
+Esta abordagem nos dá uma abordagem que explora apenas uma quantidade polinomial de candidatos, proporcional a $\lg X$.
 
-\subsection*{Demonstrações}
+\subsection{Algoritmo}
 
-Provaremos as afirmações feitas na seção anterior. Utilizaremos $h^*$ como notação para o vetor $h$ após a aplicação de um conjunto de operações.
-
-Definiremos $H$ como \textbf{viável} se existe um conjunto de até $X$ operações que aplicadas a $h$ produzem um vetor $h^*$ tal que $h^*_i \geq H$ para todo $i \in [1, n]$.
-
-\begin{prop}
-    $H$ é viável $\so$ $H^*$ é viável para todo $H^* < H$
-\end{prop}
-
-\begin{proof}
-    Seja $h^*$ o vetor resultante da aplicação de $k \leq X$ operações necessárias para que $h^*_i \geq H$ para todo $i \in [1, n]$. É trivial que $h^*_i \geq H - 1$. Assim temos que a aplicação das mesmas operações que produzem um vetor $h^*$ no qual $H - 1$ é viável.
-\end{proof}
-
-\begin{prop}
-    Algoritmo descrito em \ref{subproblema:algo} cria um vetor $h^*$ que respeita a restrição $h^*_i \geq H$ utilizando o menor número de operações possível.
-\end{prop}
-
-\begin{proof}
-    Definimos uma sequência de operações $s$ como uma sequência de índices ordenados que representam operações num intervalo com tal índice como extremidade esquerda. Por exemplo: $s = (1, 3)$ é a aplicação das operações que incrementam valores de $h$ de índices $[1, min(1 + D, n)]$ e $[3, min(3 + D, n)]$.
-    
-    Seja $s$ a sequência de operações aplicadas que criam vetor $h^*$ que respeita a restrição de $H$ e seja $s'$ uma sequência de operações tal que $|s'|$ é mínimo, com maior prefixo comum com $s$ que cria um vetor $h'$ que respeita a restrição de $H$.
-    
-    Se $s = s'$, está provado.
-
-    Caso contrário, seja $k$ o menor índice tal que $s_k \neq s'_k$.
-
-    Pela invariante do algoritmo vale que, se $s_i \neq s_{i - 1}$, todos os $h^*_j \geq H$ para todo $j < s_i$, ou seja, todos os índices antes de $s_i$ já satisfazem a condição. Também vale que, para todo índice $s_i$, $h^*_{s_i}$ é justo, isto é, $h^*_{s_i} = H$.
-
-    Se $s_k < s'_k$, $s'$ possui uma ocorrência a menos de $s_k$ que $s$ e $h^*_j = H$, então $h'_j < H$, uma contradição na hipótese que $h'$ cria um vetor que respeita a restrição de $H$.
-
-    Se $s_k > s'_k$, $s'$ possui uma ocorrência a mais de $s'_k$ que $s$. Ora, mas como $h^*_{s'_k} = H$, então $h'$ apresenta folga, ou seja, $h'_{s'_k} > H$. Assim, podemos substituir $s'_k$ por $s_k$ em $s'$, fazendo com que $h'_{s'_k} = H$ e mantendo o mesmo ou aumentando os $h'_j$ com $j > s'_k$. Esta é uma contradição na hipótese que $s'$ tem máximo prefixo comum com $s$.
-
-\end{proof}
-
-Como o algoritmo \ref{subproblema:algo} utiliza o menor número de operações, se este número for menor ou igual a $X$, significa que o $H$ fixado é fazível.
-
-\section{Implementação e análise}
+Utilizando ambas as ideias desenolvidas anteriormente, podemos desenvolver o seguinte algoritmo:
 
 \begin{algorithm}[H]
 \caption{Solução para o Problema \ref{subproblema}}
@@ -128,7 +95,46 @@ No pior caso, a função \textsc{Valido} aplica exatamente uma operação em um 
 
 A função \textsc{Resolve}, por sua vez, chama \textsc{Valido} e reduz o espaço de busca de $H$ na metade a cada iteração. Assim, a complexidade de \textsc{Resolve} é $O(nD \lg X)$.
 
-Embora a solução seja polinomial pois $D$ é limitado por $n$, ainda há como melhorar a solução. Podemos desconfiar que \textsc{Valido} tenha espaço para otimizações. 
+\subsection{Demonstrações}
+
+Provaremos as afirmações feitas na seção anterior. Utilizaremos $h^*$ como notação para o vetor $h$ após a aplicação de um conjunto de operações.
+
+Definiremos $H$ como \textbf{viável} se existe um conjunto de até $X$ operações que aplicadas a $h$ produzem um vetor $h^*$ tal que $h^*_i \geq H$ para todo $i \in [1, n]$.
+
+\begin{prop}
+    $H$ é viável $\so$ $H^*$ é viável para todo $H^* < H$
+\end{prop}
+
+\begin{proof}
+    Seja $h^*$ o vetor resultante da aplicação de $k \leq X$ operações necessárias para que $h^*_i \geq H$ para todo $i \in [1, n]$. É trivial que $h^*_i \geq H - 1$. Assim temos que a aplicação das mesmas operações que produzem um vetor $h^*$ no qual $H - 1$ é viável.
+\end{proof}
+
+\begin{prop}
+    A função $\textsc{Valido}$ descrita em \ref{subproblema:code} cria um vetor $h^*$ que respeita a restrição $h^*_i \geq H$ utilizando o menor número de operações possível.
+\end{prop}
+
+\begin{proof}
+    Definimos uma sequência de operações $s$ como uma sequência de índices ordenados que representam operações num intervalo com tal índice como extremidade esquerda. Por exemplo: $s = (1, 3)$ é a aplicação das operações que incrementam valores de $h$ de índices $[1, min(1 + D, n)]$ e $[3, min(3 + D, n)]$.
+    
+    Seja $s$ a sequência de operações aplicadas que criam vetor $h^*$ que respeita a restrição de $H$ e seja $s'$ uma sequência de operações tal que $|s'|$ é mínimo, com maior prefixo comum com $s$ que cria um vetor $h'$ que respeita a restrição de $H$.
+    
+    Se $s = s'$, está provado.
+
+    Caso contrário, seja $k$ o menor índice tal que $s_k \neq s'_k$.
+
+    Pela invariante do algoritmo vale que, se $s_i \neq s_{i - 1}$, todos os $h^*_j \geq H$ para todo $j < s_i$, ou seja, todos os índices antes de $s_i$ já satisfazem a condição. Também vale que, para todo índice $s_i$, $h^*_{s_i}$ é justo, isto é, $h^*_{s_i} = H$.
+
+    Se $s_k < s'_k$, $s'$ possui uma ocorrência a menos de $s_k$ que $s$ e $h^*_j = H$, então $h'_j < H$, uma contradição na hipótese que $h'$ cria um vetor que respeita a restrição de $H$.
+
+    Se $s_k > s'_k$, $s'$ possui uma ocorrência a mais de $s'_k$ que $s$. Ora, mas como $h^*_{s'_k} = H$, então $h'$ apresenta folga, ou seja, $h'_{s'_k} > H$. Assim, podemos substituir $s'_k$ por $s_k$ em $s'$, fazendo com que $h'_{s'_k} = H$ e mantendo o mesmo ou aumentando os $h'_j$ com $j > s'_k$. Esta é uma contradição na hipótese que $s'$ tem máximo prefixo comum com $s$.
+
+\end{proof}
+
+A função $\textsc{Valido}$ descrita em \ref{subproblema:code} utiliza o menor número de operações, se este número for menor ou igual a $X$, significa que o $H$ fixado é fazível.
+
+\subsection{Otimizações}
+
+Embora o algoritmo \ref{subproblema:code} seja polinomial pois $D$ é limitado por $n$, ainda há como melhorar a solução. Podemos desconfiar que \textsc{Valido} tenha espaço para otimizações. 
 
 Precisamos de uma estrutura de dados que dê suporte a incrementar intervalos e acessar posições do vetor de forma eficiente. Uma opção é utilizar uma Árvore de Segmentos com Propagação Preguiçosa \cite{matheusmso}, reduzindo a complexidade de cada operação de $O(D)$ para $O(\lg n)$, resultando na complexidade $O(n \lg n \lg X)$.
 

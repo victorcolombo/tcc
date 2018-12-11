@@ -32,7 +32,33 @@ Destas observações segue o seguinte algoritmo:
 
 \subsubsection*{Evitando multa e quanto mais tarde, melhor}
 
-Partindo da tarefa $1$, verifique se é possível não pagar sua multa. Em caso afirmativo, escalone para o maior tempo $t_1 \leq p_1$. Caso contrário, escalone para o tempo mais tarde ainda livre. Repita para $2$, $3$, ..., até $n$.
+Partindo da tarefa $1$, verifique se é possível não pagar sua multa. Em caso afirmativo, escalone para o maior tempo $t_1 \leq p_1$. Caso contrário, escalone para o tempo mais tarde ainda livre. Repita para $2$, $3$, ..., até $n$. Esta ideia pode ser expressa pelo seguinte pseudocodigo:
+
+\begin{algorithm}[H]
+\caption{Solução gulosa errada para o Problema \ref{ordenacao}}
+\label{ordenacao:code_wrong}
+\begin{algorithmic}[1]
+\Function{\textsc{Resolve}}{v, n}
+    \State $escalonamento \rec \{0\}^n$
+    \For{$i$ de $1$ até $n$}
+        \For{$j$ de $n$ até $1$}
+            \If{$escalonamento[j] = 0$}
+                \State $t \rec j$
+                \State $break$
+            \EndIf
+        \EndFor
+        \For{$j$ de $v[i].p$ até $1$}
+            \If{escalonamento[j] = 0}
+                \State $t \rec j$
+                \State $break$
+            \EndIf
+        \EndFor
+        \State $escalonamento[t] \rec v[i].indice$
+    \EndFor
+    \State \Return escalonamento
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 Encontramos assim um critério de escolha de tempos que aplica uma ideia gulosa de evitar pagar multa quando possível. Entretanto, a estratégia proposta não leva a uma solução ótima.
 
@@ -46,9 +72,44 @@ Utilizando o contra exemplo acima, desenvolvemos a intuição de que vale a pena
 
 Processando as tarefas da maior multa para menor, verifique para cada uma se é possível não pagar sua multa. Em caso afirmativo, escalone tal tarefa para o maior tempo anterior ou igual ao seu prazo. Caso contrário, escalone-a para o tempo mais tarde ainda livre.
 
-Esta abordagem está correta, como provaremos a seguir.
+Esta abordagem está correta. Implementaremos e provaremos sua corretude a seguir.
 
-\subsection*{Demonstrações}
+\subsection{Algoritmo}
+
+Para implementação deste problema, podemos montar um vetor $escalonamento$ tal que $escalonamento[j] = i$ indica que a tarefa $i$ foi atribuída ao tempo $j$. Se o tempo $j$ não foi escalonado para nenhuma tarefa numa dada iteração, assumimos que $escalonamento[j] = 0$.
+
+Para cada tarefa $i$, montaremos uma tripla $v_i = (m = m_i, p = p_i, indice = i)$. Ordenaremos tais triplas em ordem decrescente de $m$, com empates resolvidos ao acaso. 
+
+Agora, processando a partir da tripla com maior multa até a menor, para cada tarefa $i$, procuramos se existe $escalonamento[j] = 0$ tal que $j \leq m_i$. Se existe, tomamos o maior $j$ que satisfaz tal condição e atualizamos $escalonamento[j] = i$. Caso contrário, tomamos o $j$ o maior tempo tal que $escalonamento[j] = 0$ e atualizamos $escalonamento[j] = i$. Cada tarefa requer $O(n)$ para encontrar tal $j$, resultando no complexidade de tempo $O(n^2)$.
+
+\begin{algorithm}[H]
+\caption{Solução gulosa ingênua para o Problema \ref{ordenacao}}
+\label{ordenacao:code_naive}
+\begin{algorithmic}[1]
+\Function{\textsc{Resolve}}{v, n}
+    \State $Ordene(v)$ \Comment{ordena tarefas em ordem decrescente de multa}
+    \State $escalonamento \rec \{0\}^n$
+    \For{$i$ de $1$ até $n$}
+        \For{$j$ de $n$ até $1$}
+            \If{$escalonamento[j] = 0$}
+                \State $t \rec j$
+                \State $break$
+            \EndIf
+        \EndFor
+        \For{$j$ de $v[i].p$ até $1$}
+            \If{escalonamento[j] = 0}
+                \State $t \rec j$
+                \State $break$
+            \EndIf
+        \EndFor
+        \State $escalonamento[t] \rec v[i].indice$
+    \EndFor
+    \State \Return escalonamento
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Demonstrações}
 
 Assumiremos sem perda de generalidade que $m_1 \geq m_2 \geq ... \geq m_n$.
 
@@ -92,49 +153,16 @@ Da mesma forma que o caso anterior, temos que $M(\widetilde{e}) \leq M(e^*)$ e $
 
 Como em todos os quatro casos chegamos numa contradição, o algoritmo produz a resposta ótima.
 
-\section{Implementação e análise}
+\subsection{Otimizações}
 
-Para implementação deste problema, podemos montar um vetor $escalonamento$ tal que $escalonamento[j] = i$ indica que a tarefa $i$ foi atribuída ao tempo $j$. Se o tempo $j$ não foi escalonado para nenhuma tarefa numa dada iteração, assumimos que $escalonamento[j] = 0$.
-
-Para cada tarefa $i$, montaremos uma tripla $v_i = (m = m_i, p = p_i, indice = i)$. Ordenaremos tais triplas em ordem decrescente de $m$, com empates resolvidos ao acaso. 
-
-Agora, processando a partir da tripla com maior multa até a menor, para cada tarefa $i$, procuramos se existe $escalonamento[j] = 0$ tal que $j \leq m_i$. Se existe, tomamos o maior $j$ que satisfaz tal condição e atualizamos $escalonamento[j] = i$. Caso contrário, tomamos o $j$ o maior tempo tal que $escalonamento[j] = 0$ e atualizamos $escalonamento[j] = i$. Cada tarefa requer $O(n)$ para encontrar tal $j$, resultando no complexidade de tempo $O(n^2)$.
-
-\begin{algorithm}[H]
-\caption{Solução gulosa ingênua para o Problema \ref{ordenacao}}
-\label{ordenacao:code_naive}
-\begin{algorithmic}[1]
-\Function{\textsc{Resolve}}{v, n}
-    \State $Ordene(v)$
-    \State $escalonamento \rec \{0\}^n$
-    \For{$i$ de $1$ até $n$}
-        \For{$j$ de $n$ até $1$}
-            \If{$escalonamento[j] = 0$}
-                \State $t \rec j$
-                \State $break$
-            \EndIf
-        \EndFor
-        \For{$j$ de $v[i].p$ até $1$}
-            \If{escalonamento[j] = 0}
-                \State $t \rec j$
-                \State $break$
-            \EndIf
-        \EndFor
-        \State $escalonamento[t] \rec v[i].indice$
-    \EndFor
-    \State \Return escalonamento
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-O gargalo do algoritmo é a escolha do tempo, já que a ordenação das tarefas é $O(n \lg n)$. Podemos otimizar a escolha do tempo através do uso de uma estrutura de dados auxiliar que consegue realizar rapidamente as operações de inserção, remoção, retornar o maior elemento no conjunto e retornar o maior elemento menor que um dado número. Um exemplo de tal estrutura é uma Árvore de Busca Binária balanceada \cite{mehta2004handbook}, que realiza todas as operações descritas acima em $O(\lg n)$, resultando numa complexidade total de $O(n \lg n)$.
+O gargalo do algoritmo \ref{ordenacao:code_naive} é a escolha do tempo, já que a ordenação das tarefas é $O(n \lg n)$. Podemos otimizar a escolha do tempo através do uso de uma estrutura de dados auxiliar que consegue realizar rapidamente as operações de inserção, remoção, retornar o maior elemento no conjunto e retornar o maior elemento menor que um dado número. Um exemplo de tal estrutura é uma Árvore de Busca Binária balanceada \cite{mehta2004handbook}, que realiza todas as operações descritas acima em $O(\lg n)$, resultando numa complexidade total de $O(n \lg n)$.
 
 \begin{algorithm}[H]
 \caption{Solução gulosa para o Problema \ref{ordenacao}}
 \label{ordenacao:code}
 \begin{algorithmic}[1]
 \Function{\textsc{Resolve}}{v, n}
-    \State $Ordene(v)$
+    \State $Ordene(v)$ \Comment{ordena tarefas em ordem decrescente de multa}
     \State $escalonamento \rec \{0\}^n$
     \State $abb \rec ArvoreBuscaBinaria(\{1, 2, ..., n\})$
     \For{$i$ de $1$ até $n$}
